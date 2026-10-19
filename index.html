@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Trend Radar - 跨境爆品智能热度置顶版</title>
+    <title>Global Trend Radar - 跨境爆品动态汰弱留强版 v3.0</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #020617; color: #f8fafc; min-height: 100vh; }
@@ -47,22 +47,22 @@
 <header>
     <div class="logo">
         <div class="dot"></div>
-        GLOBAL RADAR <span class="badge">智能热度置顶版</span>
+        GLOBAL RADAR <span class="badge">动态汰弱留强版 v3.0</span>
     </div>
     <div class="ctrl-bar">
         <input type="password" id="dsKey" class="inp" placeholder="选填: DeepSeek API Key">
-        <button class="btn-sync" onclick="fetchAllData()">⚡ 智能热度刷新</button>
+        <button class="btn-sync" onclick="fetchAllData()">⚡ 刷新并汰弱留强</button>
     </div>
 </header>
 
 <main>
     <div class="status-box" id="statusBar">
-        <span>🚀 智能算法已激活：系统将自动识别高飙升率与热议爆品，实时推送到列表最前方。</span>
+        <span>🔄 动态雷达已就绪：点击刷新将自动淘汰池中最低分的旧爆品，引入全新高热爆品！</span>
         <span id="refreshTime" class="green">状态: 运行正常</span>
     </div>
 
     <div class="toolbar">
-        <input type="text" id="searchInput" class="search-box" placeholder="🔍 实时搜索关键词（如：车、猫、厨房、TikTok...）" oninput="applyFilter()">
+        <input type="text" id="searchInput" class="search-box" placeholder="🔍 实时搜索关键词（如：车, 猫, 厨房, TikTok...）" oninput="applyFilter()">
         <button class="filter-btn active" onclick="setCategory('all', this)">全部爆品</button>
         <button class="filter-btn" onclick="setCategory('TikTok', this)">🔥 TikTok 专区</button>
         <button class="filter-btn" onclick="setCategory('Amazon', this)">📦 Amazon 专区</button>
@@ -74,16 +74,20 @@
 </main>
 
 <script>
-    // 初始爆品库（带有热度权重点 score，用于自动排序推送到前面）
+    // 候选爆品替补池（当主池低分产品被淘汰时，从这里抽取或由AI生成新爆品顶替）
+    const candidatePool = [
+        { id: 201, platform: "TikTok", heat: "🔥 TikTok 萌宠类目黑马 +520%", score: 94, title: "宠物自动饮水机防溅硅胶垫 (Pet Water Fountain Mat)", price: "$14.99", cost: "¥4.5", margin: "88%", kw: "宠物防水硅胶垫 狗碗猫碗垫", desc: "欧美养宠家庭标配，解决木地板进水痛点，体积轻小、复购率极高。" },
+        { id: 202, platform: "Amazon", heat: "🔥 Amazon 户外露营飙升榜", score: 91, title: "便携式折叠太阳能充电包 (Foldable Solar Panel Charger)", price: "$45.99", cost: "¥32.0", margin: "75%", kw: "太阳能折叠充电板 户外露营装备", desc: "徒步与露营爱好者刚需，支持手机急速快充，TikTok 户外达人带货转化极强。" },
+        { id: 203, platform: "Reddit", heat: "🔥 Reddit 独立站热议爆款", score: 89, title: "多功能车载缝隙收纳盒 (Car Seat Gap Organizer)", price: "$19.99", cost: "¥6.0", margin: "89%", kw: "汽车座椅缝隙收纳盒 车载储物盒", desc: "防止手机、钥匙掉入座椅缝隙，北美车主几乎人手一个，极佳的普货独立站爆品。" },
+        { id: 204, platform: "TikTok", heat: "🔥 TikTok 美区厨房新奇特", score: 96, title: "电动旋转红酒醒酒器 (Electric Wine Aerator and Dispenser)", price: "$29.99", cost: "¥12.0", margin: "82%", kw: "电动醒酒器 自动倒酒器 红酒器具", desc: "一键自动抽真空并醒酒倒出，礼品属性极强，在欧美节日季和周末派对视频中极易爆发。" }
+    ];
+
+    // 当前主展示爆品池
     let masterPool = [
-        { id: 101, platform: "TikTok", heat: "🔥 TikTok 居家类目霸榜", score: 95, title: "厨房按压式定量喷油瓶 (2-in-1 Glass Oil Dispenser Sprayer)", price: "$16.99", cost: "¥7.2", margin: "83%", kw: "喷倒两用油壶 空气炸锅喷油瓶", desc: "完美契合欧美家庭空气炸锅控油痛点，既能雾化喷油又能倾倒，复购与连带率极高。" },
-        { id: 102, platform: "TikTok", heat: "🔥 TikTok 美区周榜飙升 +410%", score: 99, title: "太空舱猫咪外出双肩包 (Bubble Cat Backpack Carrier)", price: "$39.99", cost: "¥29.0", margin: "84%", kw: "太空舱猫包 跨境 透明宠物双肩包", desc: "高透亚克力太空罩设计，解决欧美养宠人群带猫出行痛点，短视频视觉冲击力极强，适合 TikTok 自然流带货。" },
-        { id: 103, platform: "Reddit", heat: "🔥 Reddit 极客热议 1.2万赞", score: 88, title: "自动搅拌懒人磁力咖啡杯 (Self Stirring Magnetic Mug)", price: "$26.99", cost: "¥15.5", margin: "81%", kw: "自动搅拌杯 磁力咖啡杯 跨境", desc: "底部磁力转子一键起漩涡，冲蛋白粉、咖啡不结块。老外办公室解压送礼神器，演示前3秒完播率极高。" },
-        { id: 104, platform: "Amazon", heat: "🔥 Amazon 汽配飙升榜 #2", score: 90, title: "汽车挡风玻璃除雾清洁刷 (Windshield Oil Film Cleaner)", price: "$18.99", cost: "¥5.8", margin: "89%", kw: "汽车玻璃油膜擦 除油膜清洁刷", desc: "自带清洁液一擦去油膜防雨痕，成本不到6块钱人民币，北美车主刚需消耗品，适合独立站捆绑买二送一。" },
-        { id: 105, platform: "YouTube", heat: "🔥 YouTube Shorts 百万播放同款", score: 85, title: "LED 感应发光流体解压飞盘 (LED Gyroscope Flying Saucer)", price: "$22.50", cost: "¥8.5", margin: "85%", kw: "发光回旋飞盘 感应飞行球 跨境玩具", desc: "夜间炫彩霓虹灯效+回旋镖玩法，在暗光视频下极具赛博朋克奇观感，欧美青少年与礼品市场转化极快。" },
-        { id: 106, platform: "TikTok", heat: "🔥 TikTok 户外运动飙升", score: 92, title: "磁吸手机支架水杯 (Magnetic Gym Water Bottle)", price: "$36.99", cost: "¥28.0", margin: "82%", kw: "磁吸手机支架水杯 跨境 运动水壶", desc: "健身房达人疯狂带货，把水杯与 MagSafe 磁吸支架合二为一，完美解决健身自拍痛点。" },
-        { id: 107, platform: "Reddit", heat: "🔥 Reddit 万人求购爆款", score: 87, title: "宠物爪子免洗清洁杯 (Dog Paw Cleaner Cup)", price: "$19.99", cost: "¥6.5", margin: "88%", kw: "宠物洗脚杯 狗狗洗爪器 硅胶", desc: "硅胶软毛旋转洗爪，遛狗回家一插一转即净。北美售价 $19.99，义乌工厂底价 ¥6.5，极致暴利。" },
-        { id: 108, platform: "Amazon", heat: "🔥 Amazon 家居照明黑马", score: 86, title: "火焰香薰加湿器 (Flame Aroma Diffuser)", price: "$32.00", cost: "¥22.0", margin: "76%", kw: "火焰加湿器 香薰机 跨境爆款", desc: "利用 LED 光影与水雾结合造出逼真壁炉火焰效果，居家氛围感拉满，极易跑出百万播放自然流。" }
+        { id: 101, platform: "TikTok", heat: "🔥 TikTok 居家类目霸榜", score: 82, title: "厨房按压式定量喷油瓶 (2-in-1 Glass Oil Dispenser Sprayer)", price: "$16.99", cost: "¥7.2", margin: "83%", kw: "喷倒两用油壶 空气炸锅喷油瓶", desc: "完美契合欧美家庭空气炸锅控油痛点，既能雾化喷油又能倾倒，复购与连带率极高。" },
+        { id: 102, platform: "TikTok", heat: "🔥 TikTok 美区周榜飙升 +410%", score: 98, title: "太空舱猫咪外出双肩包 (Bubble Cat Backpack Carrier)", price: "$39.99", cost: "¥29.0", margin: "84%", kw: "太空舱猫包 跨境 透明宠物双肩包", desc: "高透亚克力太空罩设计，解决欧美养宠人群带猫出行痛点，短视频视觉冲击力极强，适合 TikTok 自然流带货。" },
+        { id: 103, platform: "Reddit", heat: "🔥 Reddit 极客热议 1.2万赞", score: 79, title: "自动搅拌懒人磁力咖啡杯 (Self Stirring Magnetic Mug)", price: "$26.99", cost: "¥15.5", margin: "81%", kw: "自动搅拌杯 磁力咖啡杯 跨境", desc: "底部磁力转子一键起漩涡，冲蛋白粉, 咖啡不结块。老外办公室解压送礼神器，演示前3秒完播率极高。" },
+        { id: 104, platform: "Amazon", heat: "🔥 Amazon 汽配飙升榜 #2", score: 85, title: "汽车挡风玻璃除雾清洁刷 (Windshield Oil Film Cleaner)", price: "$18.99", cost: "¥5.8", margin: "89%", kw: "汽车玻璃油膜擦 除油膜清洁刷", desc: "自带清洁液一擦去油膜防雨痕，成本不到6块钱人民币，北美车主刚需消耗品，适合独立站捆绑买二送一。" }
     ];
 
     let currentCategory = 'all';
@@ -112,7 +116,6 @@
         box.innerHTML = items.map((item, index) => {
             const url1688 = `https://s.1688.com/selloffer/offer_search.htm?keywords=${encodeURIComponent(item.kw)}`;
             const isFav = favorites.includes(item.id);
-            // 如果排在最前面且得分极高，打上“🔥 智能置顶爆品”标签
             const isTop = index === 0 && item.score >= 90;
             return `
             <div class="item-card">
@@ -153,14 +156,12 @@
         const keyword = document.getElementById('searchInput').value.toLowerCase().trim();
         let list = [...masterPool];
 
-        // 分类筛选
         if (currentCategory === 'fav') {
             list = list.filter(item => favorites.includes(item.id));
         } else if (currentCategory !== 'all') {
             list = list.filter(item => item.platform === currentCategory);
         }
 
-        // 关键词搜索筛选
         if (keyword) {
             list = list.filter(item => 
                 item.title.toLowerCase().includes(keyword) || 
@@ -170,9 +171,8 @@
             );
         }
 
-        // 核心排序算法：按照热度评分（score）从高到低自动置顶排序！
+        // 依然保持高分置顶
         list.sort((a, b) => b.score - a.score);
-
         render(list);
     }
 
@@ -181,18 +181,47 @@
         const timeEl = document.getElementById('refreshTime');
         const apiKey = document.getElementById('dsKey').value.trim();
 
-        // 刷新时微调本地热度分，让部分潜力爆品随机获得更高的飙升权重新鲜感
-        masterPool.forEach(item => {
-            item.score += Math.floor(Math.random() * 5) - 2; // 微调浮动
-        });
-        
+        // 核心汰弱留强机制：
+        // 1. 找出当前主池中评分最低的一个旧爆品
+        masterPool.sort((a, b) => a.score - b.score);
+        const lowestItem = masterPool[0]; // 分数最低的被锁定准备淘汰
+
+        let incomingItem = null;
+
+        // 2. 如果备用候选池里还有货，从中拿出一个高分新品去替换它
+        if (candidatePool.length > 0) {
+            incomingItem = candidatePool.shift(); // 取出一个替补新品
+            candidatePool.push(lowestItem); // 把被淘汰的旧品扔回替补池循环
+        } else {
+            // 如果替补池空了，随机生成一个模拟的新高分爆品
+            incomingItem = {
+                id: Date.now(),
+                platform: "TikTok",
+                heat: "🔥 实时全网新捕获爆品 +580%",
+                score: 97,
+                title: "多功能纳米无痕双面胶带 (Nano Magic Clear Tape)",
+                price: "$12.99",
+                cost: "¥3.2",
+                margin: "90%",
+                kw: "纳米无痕双面胶 强力透明胶带",
+                desc: "TikTok 房间改造与收纳类目霸榜神器，撕下不留痕，成本极低、复购率爆表。"
+            };
+            candidatePool.push(lowestItem);
+        }
+
+        // 3. 在主池中用新产品替换掉最低分的产品
+        const indexToReplace = masterPool.findIndex(item => item.id === lowestItem.id);
+        if (indexToReplace !== -1) {
+            masterPool[indexToReplace] = incomingItem;
+        }
+
         applyFilter();
         const now = new Date();
         const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
         timeEl.innerText = `刷新于: ${timeStr}`;
-        status.innerHTML = `<span>✅ 智能热度重排完成：全网最高飙升爆品已自动推至首位。</span>`;
+        status.innerHTML = `<span>♻️ 汰弱留强成功：已自动淘汰低分旧品「${lowestItem.title.substring(0,12)}...」，引入高热新品「${incomingItem.title.substring(0,12)}...」！</span>`;
 
-        // 如果填写了 API Key，调用 AI 实时推演并赋予最高分（100分），强制置顶第一名
+        // 如果填写了 API Key，异步让 AI 额外生成一个满分（100分）的超级爆品直接替换次低分产品
         if (apiKey) {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 5000);
@@ -202,7 +231,7 @@
                 headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
                 body: JSON.stringify({
                     model: "deepseek-chat",
-                    messages: [{ role: "user", content: "请推荐1个当前TikTok美区极具爆发力的跨境小商品，赋予超高热度。严格只返回JSON格式：{\"id\":999,\"platform\":\"TikTok\",\"heat\":\"🔥 TikTok 实时飙升 +680%\",\"score\":100,\"title\":\"中英文产品名\",\"price\":\"$29.99\",\"cost\":\"¥9.0\",\"margin\":\"88%\",\"kw\":\"1688搜索词\",\"desc\":\"50字爆款逻辑与高飙升率拆解\"}" }],
+                    messages: [{ role: "user", content: "请推荐1个当前TikTok或亚马逊极具爆发力的跨境小商品。严格只返回JSON格式：{\"id\":999,\"platform\":\"TikTok\",\"heat\":\"🔥 DeepSeek AI 实时推演爆品\",\"score\":100,\"title\":\"中英文产品名\",\"price\":\"$24.99\",\"cost\":\"¥8.0\",\"margin\":\"87%\",\"kw\":\"1688搜索词\",\"desc\":\"50字痛点与爆款逻辑拆解\"}" }],
                     response_format: { type: "json_object" }
                 }),
                 signal: controller.signal
@@ -210,16 +239,19 @@
                 clearTimeout(timeoutId);
                 const aiItem = JSON.parse(data.choices[0].message.content);
                 aiItem.id = Date.now();
-                masterPool.unshift(aiItem); // 压入雷达库首位
+                
+                // 再次按分数排序，把当前剩下的最低分产品也替换成AI的新品
+                masterPool.sort((a, b) => a.score - b.score);
+                masterPool[0] = aiItem; // 替换最低分
+                
                 applyFilter();
-                status.innerHTML = `<span>👑 成功捕捉到 TikTok 最新飙升爆品，已通过智能算法置顶到最前方！</span>`;
+                status.innerHTML = `<span>👑 AI 实时推演完成：已成功淘汰末位旧品，置顶最新 AI 蓝海爆品！</span>`;
             }).catch(e => {
-                console.log("AI 响应超时或受限，已维持本地智能热度排行。");
+                console.log("AI 响应超时，已完成本地汰弱留强轮换。");
             });
         }
     }
 
-    // 页面初次加载按热度排序
     applyFilter();
 </script>
 </body>
