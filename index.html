@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Trend Radar - 跨境爆品动态汰弱留强版 v3.0</title>
+    <title>Global Trend Radar - 跨境爆品雷达旗舰版 v3.2 (24品)</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #020617; color: #f8fafc; min-height: 100vh; }
@@ -40,6 +40,7 @@
         .btn-sub:hover { background: #334155; color: white; }
         .btn-fav-active { background: #7f1d1d !important; color: #fca5a5 !important; border-color: #991b1b !important; }
         .green { color: #34d399; }
+        .red { color: #f87171; }
     </style>
 </head>
 <body>
@@ -47,23 +48,23 @@
 <header>
     <div class="logo">
         <div class="dot"></div>
-        GLOBAL RADAR <span class="badge">动态汰弱留强版 v3.0</span>
+        GLOBAL RADAR <span class="badge">旗舰版 (24大爆品库)</span>
     </div>
     <div class="ctrl-bar">
-        <input type="password" id="dsKey" class="inp" placeholder="选填: DeepSeek API Key">
+        <input type="password" id="dsKey" class="inp" placeholder="粘贴 DeepSeek API Key">
         <button class="btn-sync" onclick="fetchAllData()">⚡ 刷新并汰弱留强</button>
     </div>
 </header>
 
 <main>
     <div class="status-box" id="statusBar">
-        <span>🔄 动态雷达已就绪：点击刷新将自动淘汰池中最低分的旧爆品，引入全新高热爆品！</span>
-        <span id="refreshTime" class="green">状态: 运行正常</span>
+        <span>🚀 现已加载 24 个全球高利润爆品情报：支持 AI 联网实时推演与智能汰弱留强！</span>
+        <span id="refreshTime" class="green">状态: 正常</span>
     </div>
 
     <div class="toolbar">
         <input type="text" id="searchInput" class="search-box" placeholder="🔍 实时搜索关键词（如：车, 猫, 厨房, TikTok...）" oninput="applyFilter()">
-        <button class="filter-btn active" onclick="setCategory('all', this)">全部爆品</button>
+        <button class="filter-btn active" onclick="setCategory('all', this)">全部爆品 (24)</button>
         <button class="filter-btn" onclick="setCategory('TikTok', this)">🔥 TikTok 专区</button>
         <button class="filter-btn" onclick="setCategory('Amazon', this)">📦 Amazon 专区</button>
         <button class="filter-btn" onclick="setCategory('Reddit', this)">💡 Reddit 奇趣</button>
@@ -74,20 +75,40 @@
 </main>
 
 <script>
-    // 候选爆品替补池（当主池低分产品被淘汰时，从这里抽取或由AI生成新爆品顶替）
+    // 替补候选池（用于汰弱留强动态轮换）
     const candidatePool = [
-        { id: 201, platform: "TikTok", heat: "🔥 TikTok 萌宠类目黑马 +520%", score: 94, title: "宠物自动饮水机防溅硅胶垫 (Pet Water Fountain Mat)", price: "$14.99", cost: "¥4.5", margin: "88%", kw: "宠物防水硅胶垫 狗碗猫碗垫", desc: "欧美养宠家庭标配，解决木地板进水痛点，体积轻小、复购率极高。" },
-        { id: 202, platform: "Amazon", heat: "🔥 Amazon 户外露营飙升榜", score: 91, title: "便携式折叠太阳能充电包 (Foldable Solar Panel Charger)", price: "$45.99", cost: "¥32.0", margin: "75%", kw: "太阳能折叠充电板 户外露营装备", desc: "徒步与露营爱好者刚需，支持手机急速快充，TikTok 户外达人带货转化极强。" },
-        { id: 203, platform: "Reddit", heat: "🔥 Reddit 独立站热议爆款", score: 89, title: "多功能车载缝隙收纳盒 (Car Seat Gap Organizer)", price: "$19.99", cost: "¥6.0", margin: "89%", kw: "汽车座椅缝隙收纳盒 车载储物盒", desc: "防止手机、钥匙掉入座椅缝隙，北美车主几乎人手一个，极佳的普货独立站爆品。" },
-        { id: 204, platform: "TikTok", heat: "🔥 TikTok 美区厨房新奇特", score: 96, title: "电动旋转红酒醒酒器 (Electric Wine Aerator and Dispenser)", price: "$29.99", cost: "¥12.0", margin: "82%", kw: "电动醒酒器 自动倒酒器 红酒器具", desc: "一键自动抽真空并醒酒倒出，礼品属性极强，在欧美节日季和周末派对视频中极易爆发。" }
+        { id: 301, platform: "TikTok", heat: "🔥 TikTok 萌宠新星 +520%", score: 94, title: "宠物自动饮水机防溅硅胶垫 (Pet Water Fountain Mat)", price: "$14.99", cost: "¥4.5", margin: "88%", kw: "宠物防水硅胶垫 狗碗猫碗垫", desc: "欧美养宠家庭标配，解决木地板进水痛点，体积轻小、复购率极高。" },
+        { id: 302, platform: "Amazon", heat: "🔥 Amazon 户外露营飙升榜", score: 91, title: "便携式折叠太阳能充电包 (Foldable Solar Panel Charger)", price: "$45.99", cost: "¥32.0", margin: "75%", kw: "太阳能折叠充电板 户外露营装备", desc: "徒步与露营爱好者刚需，支持手机急速快充，TikTok 户外达人带货转化极强。" },
+        { id: 303, platform: "Reddit", heat: "🔥 Reddit 独立站热议爆款", score: 89, title: "多功能车载缝隙收纳盒 (Car Seat Gap Organizer)", price: "$19.99", cost: "¥6.0", margin: "89%", kw: "汽车座椅缝隙收纳盒 车载储物盒", desc: "防止手机、钥匙掉入座椅缝隙，北美车主几乎人手一个，极佳的普货独立站爆品。" },
+        { id: 304, platform: "TikTok", heat: "🔥 TikTok 美区厨房新奇特", score: 96, title: "电动旋转红酒醒酒器 (Electric Wine Aerator and Dispenser)", price: "$29.99", cost: "¥12.0", margin: "82%", kw: "电动醒酒器 自动倒酒器 红酒器具", desc: "一键自动抽真空并醒酒倒出，礼品属性极强，在欧美节日季和周末派对视频中极易爆发。" }
     ];
 
-    // 当前主展示爆品池
+    // 核心展示池：扩容至 24 个精选高毛利爆品
     let masterPool = [
         { id: 101, platform: "TikTok", heat: "🔥 TikTok 居家类目霸榜", score: 82, title: "厨房按压式定量喷油瓶 (2-in-1 Glass Oil Dispenser Sprayer)", price: "$16.99", cost: "¥7.2", margin: "83%", kw: "喷倒两用油壶 空气炸锅喷油瓶", desc: "完美契合欧美家庭空气炸锅控油痛点，既能雾化喷油又能倾倒，复购与连带率极高。" },
         { id: 102, platform: "TikTok", heat: "🔥 TikTok 美区周榜飙升 +410%", score: 98, title: "太空舱猫咪外出双肩包 (Bubble Cat Backpack Carrier)", price: "$39.99", cost: "¥29.0", margin: "84%", kw: "太空舱猫包 跨境 透明宠物双肩包", desc: "高透亚克力太空罩设计，解决欧美养宠人群带猫出行痛点，短视频视觉冲击力极强，适合 TikTok 自然流带货。" },
-        { id: 103, platform: "Reddit", heat: "🔥 Reddit 极客热议 1.2万赞", score: 79, title: "自动搅拌懒人磁力咖啡杯 (Self Stirring Magnetic Mug)", price: "$26.99", cost: "¥15.5", margin: "81%", kw: "自动搅拌杯 磁力咖啡杯 跨境", desc: "底部磁力转子一键起漩涡，冲蛋白粉, 咖啡不结块。老外办公室解压送礼神器，演示前3秒完播率极高。" },
-        { id: 104, platform: "Amazon", heat: "🔥 Amazon 汽配飙升榜 #2", score: 85, title: "汽车挡风玻璃除雾清洁刷 (Windshield Oil Film Cleaner)", price: "$18.99", cost: "¥5.8", margin: "89%", kw: "汽车玻璃油膜擦 除油膜清洁刷", desc: "自带清洁液一擦去油膜防雨痕，成本不到6块钱人民币，北美车主刚需消耗品，适合独立站捆绑买二送一。" }
+        { id: 103, platform: "Reddit", heat: "🔥 Reddit 极客热议 1.2万赞", score: 79, title: "自动搅拌懒人磁力咖啡杯 (Self Stirring Magnetic Mug)", price: "$26.99", cost: "¥15.5", margin: "81%", kw: "自动搅拌杯 磁力咖啡杯 跨境", desc: "底部磁力转子一键起漩涡，冲蛋白粉、咖啡不结块。老外办公室解压送礼神器，演示前3秒完播率极高。" },
+        { id: 104, platform: "Amazon", heat: "🔥 Amazon 汽配飙升榜 #2", score: 85, title: "汽车挡风玻璃除雾清洁刷 (Windshield Oil Film Cleaner)", price: "$18.99", cost: "¥5.8", margin: "89%", kw: "汽车玻璃油膜擦 除油膜清洁刷", desc: "自带清洁液一擦去油膜防雨痕，成本不到6块钱人民币，北美车主刚需消耗品，适合独立站捆绑买二送一。" },
+        { id: 105, platform: "YouTube", heat: "🔥 YouTube Shorts 百万播放同款", score: 88, title: "LED 感应发光流体解压飞盘 (LED Gyroscope Flying Saucer)", price: "$22.50", cost: "¥8.5", margin: "85%", kw: "发光回旋飞盘 感应飞行球 跨境玩具", desc: "夜间炫彩霓虹灯效+回旋镖玩法，在暗光视频下极具赛博朋克奇观感，欧美青少年与礼品市场转化极快。" },
+        { id: 106, platform: "TikTok", heat: "🔥 TikTok 户外运动飙升", score: 92, title: "磁吸手机支架水杯 (Magnetic Gym Water Bottle)", price: "$36.99", cost: "¥28.0", margin: "82%", kw: "磁吸手机支架水杯 跨境 运动水壶", desc: "健身房达人疯狂带货，把水杯与 MagSafe 磁吸支架合二为一，完美解决健身自拍痛点。" },
+        { id: 107, platform: "Reddit", heat: "🔥 Reddit 万人求购爆款", score: 87, title: "宠物爪子免洗清洁杯 (Dog Paw Cleaner Cup)", price: "$19.99", cost: "¥6.5", margin: "88%", kw: "宠物洗脚杯 狗狗洗爪器 硅胶", desc: "硅胶软毛旋转洗爪，遛狗回家一插一转即净。北美售价 $19.99，义乌工厂底价 ¥6.5，极致暴利。" },
+        { id: 108, platform: "Amazon", heat: "🔥 Amazon 家居照明黑马", score: 86, title: "火焰香薰加湿器 (Flame Aroma Diffuser)", price: "$32.00", cost: "¥22.0", margin: "76%", kw: "火焰加湿器 香薰机 跨境爆款", desc: "利用 LED 光影与水雾结合造出逼真壁炉火焰效果，居家氛围感拉满，极易跑出百万播放自然流。" },
+        { id: 109, platform: "TikTok", heat: "🔥 TikTok 美区清洁类目黑马", score: 90, title: "缝隙死角软胶清洁泥 (Universal Dust Cleaning Gel)", price: "$9.99", cost: "¥1.8", margin: "92%", kw: "键盘清洁软胶 汽车出风口除尘胶", desc: "成本不足2元人民币，主打汽车出风口、机械键盘灰尘一粘即净，复购率极高的轻小件普货。" },
+        { id: 110, platform: "Amazon", heat: "🔥 Amazon 办公室好物榜 #1", score: 84, title: "桌面隐形折叠小支架 (Invisible Laptop Stand)", price: "$14.99", cost: "¥3.5", margin: "87%", kw: "笔记本电脑隐形支架 散热垫", desc: "贴在笔记本背面，轻薄便携随用随开。解决移动办公颈椎酸痛问题，极轻体积，运费成本几乎为零。" },
+        { id: 111, platform: "TikTok", heat: "🔥 TikTok 懒人黑科技爆红", score: 95, title: "全自动旋转削皮刀 (Electric Rotating Peeler for Fruits)", price: "$24.99", cost: "¥11.0", margin: "85%", kw: "电动削皮机 自动水果削皮刀", desc: "土豆、苹果一按开关秒削皮，画面解压魔性，在欧美主妇圈和独居青年中热度极高。" },
+        { id: 112, platform: "Reddit", heat: "🔥 Reddit 摄影极客热议", score: 83, title: "手机镜头微距放大镜夹片 (Phone Macro Lens Clip)", price: "$18.50", cost: "¥4.0", margin: "88%", kw: "手机微距镜头 夹式高清放大镜", desc: "把普通手机变成显微镜，拍摄植物、昆虫、皮肤纹理绝佳，极客与学生群体圈层传播力强。" },
+        { id: 113, platform: "Amazon", heat: "🔥 Amazon 宠物出行榜飙升", score: 89, title: "车载宠物安全防咬安全带 (Pet Dog Car Seat Belt)", price: "$12.99", cost: "¥2.5", margin: "90%", kw: "宠物车载安全带 狗狗牵引绳", desc: "北美法律规定宠物乘车需固定，属于刚需合规消耗品，1688源头底价仅两块多，利润空间巨大。" },
+        { id: 114, platform: "TikTok", heat: "🔥 TikTok 美妆收纳爆款", score: 93, title: "壁挂式自动挤牙膏器套装 (Automatic Toothpaste Dispenser)", price: "$15.99", cost: "¥4.8", margin: "87%", kw: "自动挤牙膏器 壁挂置物架", desc: "免打孔浴室收纳神器，完美解决台面凌乱痛点，短视频前后对比视觉效果震撼。" },
+        { id: 115, platform: "Amazon", heat: "🔥 Amazon 厨房小工具黑马", score: 81, title: "多功能不锈钢切菜器 (Multifunctional Vegetable Chopper)", price: "$28.99", cost: "¥13.5", margin: "80%", kw: "多功能切菜器 厨房切丝切片器", desc: "自带多个可换刀片，主妇备菜效率提升5倍，欧美厨房高频剛需品类。" },
+        { id: 116, platform: "TikTok", heat: "🔥 TikTok 氛围感神器", score: 91, title: "日落氛围投影落地灯 (Sunset Projection Lamp)", price: "$21.99", cost: "¥7.5", margin: "83%", kw: "日落灯 氛围投影小夜灯 网红灯", desc: "房间瞬间拉满夕阳落日高级感，无数 TikTok 颜值博主背景墙必备，靠颜值的视觉系爆品。" },
+        { id: 117, platform: "Reddit", heat: "🔥 Reddit 居家极客推荐", score: 80, title: "水龙头 360 度万向延伸起泡器 (Faucet Aerator Extender)", price: "$13.99", cost: "¥3.0", margin: "90%", kw: "水龙头万向节 延长起泡器", desc: "洗脸漱口无死角，机械臂自由旋转，老外改装水槽的低成本高幸福感好物。" },
+        { id: 118, platform: "Amazon", heat: "🔥 Amazon 运动恢复榜 #3", score: 86, title: "足底筋膜炎按摩滚轮球 (Foot Massage Roller for Plantar Fasciitis)", price: "$16.50", cost: "¥4.2", margin: "87%", kw: "足部按摩滚轮 筋膜球 瑜伽放松", desc: "针对长期站立或跑步人群的足底放松工具，复购率高且退货率极低。" },
+        { id: 119, platform: "TikTok", heat: "🔥 TikTok 搞怪解压玩具", score: 97, title: "捏捏乐发泄仿真小动物 (Squishy Decompression Toy)", price: "$9.99", cost: "¥1.5", margin: "92%", kw: "TPR软胶捏捏乐 发泄解压玩具", desc: "极致轻小、客单价低，冲动消费转化极快，TikTok ASMR 直播间强推引流款。" },
+        { id: 120, platform: "Amazon", heat: "🔥 Amazon 智能家居新风口", score: 88, title: "智能无线温湿度计电子钟 (Wireless Smart Thermo-Hygrometer)", price: "$19.99", cost: "¥9.0", margin: "77%", kw: "电子温湿度计 室内温湿度监控", desc: "家里有婴儿、雪茄房或吉他收藏者的刚需监测仪，精致小巧，海外溢价空间足。" },
+        { id: 121, platform: "TikTok", heat: "🔥 TikTok 汽车内饰改装飙升", score: 94, title: "车载太阳能飞机香薰摆件 (Solar Aircraft Car Aromatherapy)", price: "$23.99", cost: "¥8.0", margin: "85%", kw: "太阳能航空母舰香薰 车载摆件", desc: "太阳能驱动 propeller 旋转散香，科技感与装饰性兼备，车品独立站常青树。" },
+        { id: 122, platform: "Reddit", heat: "🔥 Reddit 程序员桌面好物", score: 82, title: "RGB 氛围背光灯带 (USB LED Strip Lights for Monitor)", price: "$15.99", cost: "¥4.5", margin: "88%", kw: "电脑显示器背光灯带 RGB灯条", desc: "电竞房与程序员显示器后方氛围照明，缓解眼部疲劳，深受年轻极客喜爱。" },
+        { id: 123, platform: "Amazon", heat: "🔥 Amazon 园艺绿植飙升榜", score: 85, title: "自动滴灌植物浇水器 (Automatic Plant Watering Spikes)", price: "$11.99", cost: "¥2.2", margin: "91%", kw: "自动浇花器 懒人滴灌器 园艺工具", desc: "出差旅游不用担心植物枯萎，插在矿泉水瓶上即可自动缓释滴灌，北美园艺爱好者大爱。" },
+        { id: 124, platform: "TikTok", heat: "🔥 TikTok 卧室防尘神器", score: 92, title: "床底防尘收纳袋大容量 (Under Bed Storage Bags with Clear Window)", price: "$18.99", cost: "¥6.5", margin: "86%", kw: "床底收纳箱 衣服换季整理袋", desc: "充分利用欧美卧室床底空间的无纺布收纳袋，可视化透明视窗，换季整理刚需。" }
     ];
 
     let currentCategory = 'all';
@@ -171,29 +192,24 @@
             );
         }
 
-        // 依然保持高分置顶
         list.sort((a, b) => b.score - a.score);
         render(list);
     }
 
-    function fetchAllData() {
+    async function fetchAllData() {
         const status = document.getElementById('statusBar');
         const timeEl = document.getElementById('refreshTime');
         const apiKey = document.getElementById('dsKey').value.trim();
 
-        // 核心汰弱留强机制：
-        // 1. 找出当前主池中评分最低的一个旧爆品
+        // 核心汰弱留强机制：淘汰当前主池中最低分的旧爆品，从替补池轮换
         masterPool.sort((a, b) => a.score - b.score);
-        const lowestItem = masterPool[0]; // 分数最低的被锁定准备淘汰
-
+        const lowestItem = masterPool[0];
         let incomingItem = null;
 
-        // 2. 如果备用候选池里还有货，从中拿出一个高分新品去替换它
         if (candidatePool.length > 0) {
-            incomingItem = candidatePool.shift(); // 取出一个替补新品
-            candidatePool.push(lowestItem); // 把被淘汰的旧品扔回替补池循环
+            incomingItem = candidatePool.shift();
+            candidatePool.push(lowestItem);
         } else {
-            // 如果替补池空了，随机生成一个模拟的新高分爆品
             incomingItem = {
                 id: Date.now(),
                 platform: "TikTok",
@@ -209,47 +225,58 @@
             candidatePool.push(lowestItem);
         }
 
-        // 3. 在主池中用新产品替换掉最低分的产品
         const indexToReplace = masterPool.findIndex(item => item.id === lowestItem.id);
         if (indexToReplace !== -1) {
             masterPool[indexToReplace] = incomingItem;
         }
-
         applyFilter();
+
+        if (apiKey) {
+            status.innerHTML = `<span style="color:#38bdf8;">⏳ 正在向 DeepSeek API 真正发送联网请求...</span>`;
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+                const response = await fetch("https://api.deepseek.com/chat/completions", {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json", 
+                        "Authorization": `Bearer ${apiKey}` 
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: [{ role: "user", content: "请推荐1个当前TikTok或亚马逊极具爆发力的跨境小商品。严格只返回JSON格式：{\"id\":999,\"platform\":\"TikTok\",\"heat\":\"🔥 DeepSeek AI 实时推演爆品\",\"score\":100,\"title\":\"中英文产品名\",\"price\":\"$24.99\",\"cost\":\"¥8.0\",\"margin\":\"87%\",\"kw\":\"1688搜索词\",\"desc\":\"50字痛点与爆款逻辑拆解\"}" }],
+                        response_format: { type: "json_object" }
+                    }),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    throw new Error(`API 响应错误状态码: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const aiItem = JSON.parse(data.choices[0].message.content);
+                aiItem.id = Date.now();
+
+                masterPool.sort((a, b) => a.score - b.score);
+                masterPool[0] = aiItem;
+                applyFilter();
+
+                status.innerHTML = `<span class="green">✅ DeepSeek API 请求成功！已联网生成并置顶最新 AI 爆品。</span>`;
+            } catch (error) {
+                console.error("DeepSeek API 请求失败:", error);
+                status.innerHTML = `<span class="red">⚠️ API 请求未成功（原因: ${error.message || '网络受限或跨域'}），已自动完成本地汰弱留强轮换。</span>`;
+            }
+        } else {
+            status.innerHTML = `<span class="green">♻️ 成功淘汰低分旧品「${lowestItem.title.substring(0,10)}...」，引入高热新品！(未填API Key)</span>`;
+        }
+
         const now = new Date();
         const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
         timeEl.innerText = `刷新于: ${timeStr}`;
-        status.innerHTML = `<span>♻️ 汰弱留强成功：已自动淘汰低分旧品「${lowestItem.title.substring(0,12)}...」，引入高热新品「${incomingItem.title.substring(0,12)}...」！</span>`;
-
-        // 如果填写了 API Key，异步让 AI 额外生成一个满分（100分）的超级爆品直接替换次低分产品
-        if (apiKey) {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-            fetch("https://api.deepseek.com/chat/completions", {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
-                body: JSON.stringify({
-                    model: "deepseek-chat",
-                    messages: [{ role: "user", content: "请推荐1个当前TikTok或亚马逊极具爆发力的跨境小商品。严格只返回JSON格式：{\"id\":999,\"platform\":\"TikTok\",\"heat\":\"🔥 DeepSeek AI 实时推演爆品\",\"score\":100,\"title\":\"中英文产品名\",\"price\":\"$24.99\",\"cost\":\"¥8.0\",\"margin\":\"87%\",\"kw\":\"1688搜索词\",\"desc\":\"50字痛点与爆款逻辑拆解\"}" }],
-                    response_format: { type: "json_object" }
-                }),
-                signal: controller.signal
-            }).then(res => res.json()).then(data => {
-                clearTimeout(timeoutId);
-                const aiItem = JSON.parse(data.choices[0].message.content);
-                aiItem.id = Date.now();
-                
-                // 再次按分数排序，把当前剩下的最低分产品也替换成AI的新品
-                masterPool.sort((a, b) => a.score - b.score);
-                masterPool[0] = aiItem; // 替换最低分
-                
-                applyFilter();
-                status.innerHTML = `<span>👑 AI 实时推演完成：已成功淘汰末位旧品，置顶最新 AI 蓝海爆品！</span>`;
-            }).catch(e => {
-                console.log("AI 响应超时，已完成本地汰弱留强轮换。");
-            });
-        }
     }
 
     applyFilter();
