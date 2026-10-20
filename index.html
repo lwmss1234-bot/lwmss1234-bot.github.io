@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok AdSpy Pro - 跨境投流监控与利润精算工作台 v5.0</title>
+    <title>TikTok AdSpy Pro - 投流监控与利润精算工作台 v5.1 修复版</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #020617; color: #f8fafc; min-height: 100vh; padding-bottom: 60px; }
@@ -21,7 +21,6 @@
 
         main { max-width: 1280px; margin: 0 auto; padding: 22px 16px; }
         
-        /* AI 定向挖品引擎栏 */
         .hunter-bar { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); border: 1px solid #312e81; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
         .hunter-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex: 1; }
         .niche-inp { background: #020617; border: 1px solid #4338ca; color: #fff; padding: 8px 14px; border-radius: 6px; font-size: 13px; min-width: 260px; flex: 1; outline: none; }
@@ -62,7 +61,6 @@
         .btn-sub:hover { background: #334155; color: white; }
         .btn-fav-active { background: #7f1d1d !important; color: #fca5a5 !important; border-color: #991b1b !important; }
 
-        /* 弹窗样式（利润计算器 & 脚本工作台） */
         .modal-mask { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.82); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 100; padding: 16px; }
         .modal-card { background: #0f172a; border: 1px solid #334155; border-radius: 14px; max-width: 560px; width: 100%; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
         .modal-head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 12px; margin-bottom: 16px; }
@@ -84,22 +82,21 @@
 <header>
     <div class="logo">
         <div class="dot"></div>
-        TIKTOK ADSPY PRO <span class="badge">v5.0 投流精算与无限挖品工作台</span>
+        TIKTOK ADSPY PRO <span class="badge">v5.1 修复版</span>
     </div>
     <div class="ctrl-bar">
-        <input type="password" id="dsKey" class="inp" placeholder="粘贴 DeepSeek Key (自动保存)" oninput="saveKey()">
+        <input type="password" id="dsKey" class="inp" placeholder="粘贴 DeepSeek Key" oninput="saveKey()">
         <button class="btn-sync" onclick="fetchAllData('')">⚡ 汰弱留强刷爆品</button>
         <button class="btn-export" onclick="exportCSV()">📥 导出选品表(CSV)</button>
     </div>
 </header>
 
 <main>
-    <!-- 杀手锏1：AI 定向赛道无限裂变引擎 -->
     <div class="hunter-bar">
         <div class="hunter-left">
             <span style="font-size:13px; font-weight:700; color:#a5b4fc;">🎯 AI 定制赛道挖品：</span>
-            <input type="text" id="nicheInput" class="niche-inp" placeholder="输入任意细分赛道/节日（如：万圣节、美甲、钓鱼、老人保健、露营...）">
-            <button class="btn-sync" style="background: linear-gradient(90deg, #6366f1, #8b5cf6);" onclick="huntCustomNiche()">🚀 AI 裂变生成该赛道爆品</button>
+            <input type="text" id="nicheInput" class="niche-inp" placeholder="输入赛道（如：万圣节、美甲、钓鱼、露营...）">
+            <button class="btn-sync" style="background: linear-gradient(90deg, #6366f1, #8b5cf6);" onclick="huntCustomNiche()">🚀 AI 裂变生成</button>
         </div>
         <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
             <span class="niche-tag" onclick="quickHunt('万圣节/圣诞礼品')">🎃 节日季暴利</span>
@@ -109,13 +106,14 @@
         </div>
     </div>
 
+    <!-- 修复点：确保内部 HTML 结构完整安全 -->
     <div class="status-box" id="statusBar">
-        <span>💡 黏性升级：支持【💰 投流ROAS回本精算】、【🎬 15秒英文口播分镜生成】、【🎯 任意赛道无限挖品并永久保存在本地库】！</span>
+        <span id="statusText">💡 系统就绪：支持投流精算与 AI 赛道裂变挖品！</span>
         <span id="refreshTime" class="cyan">总库容量: <b id="totalPoolCount">24</b> 款</span>
     </div>
 
     <div class="toolbar">
-        <input type="text" id="searchInput" class="search-box" placeholder="🔍 实时搜索爆品 / 脚本钩子 / 受众标签..." oninput="applyFilter()">
+        <input type="text" id="searchInput" class="search-box" placeholder="🔍 搜索爆品 / 脚本钩子 / 受众..." oninput="applyFilter()">
         <button class="filter-btn active" onclick="setCategory('all', this)">全部爆品库</button>
         <button class="filter-btn" onclick="setCategory('AdSpy', this)">💰 投流暴利榜</button>
         <button class="filter-btn" onclick="setCategory('Viral', this)">📈 自然流飙升</button>
@@ -127,75 +125,44 @@
     <div id="listContainer"></div>
 </main>
 
-<!-- 弹窗1：TikTok 投流 ROAS 与单品净利精算器 -->
+<!-- 弹窗1：投流回本精算器 -->
 <div class="modal-mask" id="calcModal">
     <div class="modal-card">
         <div class="modal-head">
-            <h3 style="margin:0; font-size:17px;">💰 TikTok 投流回本 ROAS 与利润精算器</h3>
+            <h3 style="margin:0; font-size:17px;">💰 投流回本 ROAS 与利润精算器</h3>
             <button class="close-btn" onclick="closeModal('calcModal')">✕</button>
         </div>
         <p id="calcTitle" style="font-size:13px; color:#25f4ee; margin-bottom:14px; font-weight:600;"></p>
         <div class="calc-grid">
-            <div class="calc-field">
-                <label>海外独立站/TT售价 ($ USD)</label>
-                <input type="number" id="cPrice" step="0.5" oninput="runCalc()">
-            </div>
-            <div class="calc-field">
-                <label>1688 拿货底价 (¥ RMB)</label>
-                <input type="number" id="cCost" step="0.5" oninput="runCalc()">
-            </div>
-            <div class="calc-field">
-                <label>跨境头程+尾程运费 (¥ RMB)</label>
-                <input type="number" id="cShip" value="26" step="1" oninput="runCalc()">
-            </div>
-            <div class="calc-field">
-                <label>单均投流广告获客成本 CPA ($ USD)</label>
-                <input type="number" id="cCpa" value="8.5" step="0.5" oninput="runCalc()">
-            </div>
-            <div class="calc-field">
-                <label>平台佣金+支付手续费 (%)</label>
-                <input type="number" id="cFee" value="8" step="1" oninput="runCalc()">
-            </div>
-            <div class="calc-field">
-                <label>当前美元汇率 (USD/RMB)</label>
-                <input type="number" id="cRate" value="7.2" step="0.1" oninput="runCalc()">
-            </div>
+            <div class="calc-field"><label>海外售价 ($)</label><input type="number" id="cPrice" step="0.5" oninput="runCalc()"></div>
+            <div class="calc-field"><label>1688底价 (¥)</label><input type="number" id="cCost" step="0.5" oninput="runCalc()"></div>
+            <div class="calc-field"><label>物流运费 (¥)</label><input type="number" id="cShip" value="26" step="1" oninput="runCalc()"></div>
+            <div class="calc-field"><label>单均广告获客 CPA ($)</label><input type="number" id="cCpa" value="8.5" step="0.5" oninput="runCalc()"></div>
+            <div class="calc-field"><label>平台佣金 (%)</label><input type="number" id="cFee" value="8" step="1" oninput="runCalc()"></div>
+            <div class="calc-field"><label>美元汇率</label><input type="number" id="cRate" value="7.2" step="0.1" oninput="runCalc()"></div>
         </div>
         <div class="calc-result">
-            <div class="res-box">
-                <div style="font-size:12px; color:#94a3b8;">盈亏保本 ROAS 警戒线</div>
-                <div id="rBreakevenRoas" style="font-size:20px; font-weight:800; margin-top:4px;" class="gold">1 : 1.45</div>
-            </div>
-            <div class="res-box">
-                <div style="font-size:12px; color:#94a3b8;">当前投流实际 ROAS</div>
-                <div id="rActualRoas" style="font-size:20px; font-weight:800; margin-top:4px;" class="cyan">1 : 2.94</div>
-            </div>
-            <div class="res-box">
-                <div style="font-size:12px; color:#94a3b8;">扣除广告后每单净赚 (RMB)</div>
-                <div id="rNetRmb" style="font-size:22px; font-weight:900; margin-top:4px;" class="green">¥58.2</div>
-            </div>
-            <div class="res-box">
-                <div style="font-size:12px; color:#94a3b8;">日出 100 单预估月净利润</div>
-                <div id="rMonthly" style="font-size:20px; font-weight:900; margin-top:4px;" class="green">¥17.4万</div>
-            </div>
+            <div class="res-box"><div style="font-size:12px; color:#94a3b8;">保本 ROAS</div><div id="rBreakevenRoas" style="font-size:20px; font-weight:800; margin-top:4px;" class="gold">1 : 1.45</div></div>
+            <div class="res-box"><div style="font-size:12px; color:#94a3b8;">实际 ROAS</div><div id="rActualRoas" style="font-size:20px; font-weight:800; margin-top:4px;" class="cyan">1 : 2.94</div></div>
+            <div class="res-box"><div style="font-size:12px; color:#94a3b8;">每单净赚 (RMB)</div><div id="rNetRmb" style="font-size:22px; font-weight:900; margin-top:4px;" class="green">¥58.2</div></div>
+            <div class="res-box"><div style="font-size:12px; color:#94a3b8;">日出100单月利</div><div id="rMonthly" style="font-size:20px; font-weight:900; margin-top:4px;" class="green">¥17.4万</div></div>
         </div>
     </div>
 </div>
 
-<!-- 弹窗2：15秒完整分镜脚本与英文口播工作台 -->
+<!-- 弹窗2：脚本工作台 -->
 <div class="modal-mask" id="scriptModal">
     <div class="modal-card">
         <div class="modal-head">
-            <h3 style="margin:0; font-size:17px;">🎬 TikTok 15秒爆款带货分镜 & 英文配音台词</h3>
+            <h3 style="margin:0; font-size:17px;">🎬 15秒爆款带货分镜 & 英文台词</h3>
             <button class="close-btn" onclick="closeModal('scriptModal')">✕</button>
         </div>
         <div id="scriptContent" style="font-size:13px; line-height:1.7; color:#e2e8f0; background:#020617; padding:14px; border-radius:8px; border:1px solid #1e293b; max-height:360px; overflow-y:auto;"></div>
-        <button class="btn-sync" style="width:100%; margin-top:14px;" onclick="copyModalScript()">📋 一键复制完整分镜与英文口播稿</button>
+        <button class="btn-sync" style="width:100%; margin-top:14px;" onclick="copyModalScript()">📋 一键复制脚本与英文台词</button>
     </div>
 </div>
 
 <script>
-    // 自动加载保存的 API Key
     document.getElementById('dsKey').value = localStorage.getItem('radar_ds_key') || '';
     function saveKey() {
         localStorage.setItem('radar_ds_key', document.getElementById('dsKey').value.trim());
@@ -226,7 +193,7 @@
         { id: 115, category: "AdSpy", heat: "💰 连续投流 11 天 · 独立站捆绑销售王", score: 85, sales7d: "11,200 单", roas: "1 : 5.0", title: "车载宠物防跳车安全带 (Dog Car Seat Belt Tether)", enKw: "Dog Car Seat Belt", price: "$12.99", cost: "¥2.5", margin: "90%", kw: "宠物车载安全带 狗狗牵引绳", hook: "🎬 黄金前3秒：急刹车时后座狗狗往前冲的惊险画面，切到扣上安全带稳稳坐在后排。", audience: "欧美养犬车主（通常一次买2-3条）" },
         { id: 116, category: "Creator", heat: "👑 备菜神器达人刷屏 · 复购率极高", score: 84, sales7d: "10,500 单", roas: "1 : 3.6", title: "多功能不锈钢按压切菜器 (Vegetable Chopper Mandoline)", enKw: "Vegetable Chopper", price: "$28.99", cost: "¥13.5", margin: "80%", kw: "多功能切菜器 厨房切丝切片器", hook: "🎬 黄金前3秒：切洋葱辣得满脸泪水，放进切菜器手起盖落1秒变成整齐洋葱丁。", audience: "家庭烹饪人群、健身备餐（Meal Prep）爱好者" },
         { id: 117, category: "Viral", heat: "📈 居家小改造 390万播放 · 零差评普货", score: 83, sales7d: "7,900 单", roas: "1 : 4.5", title: "水龙头 360 度万向机械臂起泡器 (Swivel Faucet Extender)", enKw: "Swivel Faucet Aerator", price: "$13.99", cost: "¥3.0", margin: "90%", kw: "水龙头万向节 延长起泡器", hook: "🎬 黄金前3秒：拧上万向节后，水柱像喷泉一样朝上直接漱口洗脸，不用再低头捧水。", audience: "居家DIY爱好者、老旧房屋租客" },
-        { id: 118, category: "AdSpy", heat: "💰 连续投流 16 天 · 极客办公高转化", score: 82, sales7d: "4,900 单", roas: "1 : 3.9", title: "笔记本背面隐形折叠支架 (Invisible Laptop Stand)", enKw: "Invisible Laptop Stand", price: "$14.99", cost: "¥3.5", margin: "87%", kw: "笔记本电脑隐形支架 散热垫", hook: "🎬 黄金前3秒：从咖啡厅合上电脑直接塞进薄包，拿出来手指一拨1秒支起黄金15度仰角。", audience: "数字游民、程序员、大学生" },
+        { id: 118, category: "AdSpy", heat: "💰 连续投流 16 天 · 极客办公高转化", score: 82, sales7d: "4,900 单", roas: "1 : 3.9", title: "笔记本背面隐形折叠支架 (Invisible Laptop Stand)", enKw: "Invisible Laptop Stand", price: "$14.99", cost: "¥3.5", margin: "87%", kw: "笔记本电脑隐形支架 散热垫", hook: "🎬 黄金前3秒：从咖啡厅合上电脑直接塞进薄包，拿外面手指一拨1秒支起黄金15度仰角。", audience: "数字游民、程序员、大学生" },
         { id: 119, category: "Creator", heat: "👑 汽车内饰改装热榜 · 男性转化率超强", score: 86, sales7d: "6,300 单", roas: "1 : 4.2", title: "车载太阳能旋转飞机香薰 (Solar Plane Car Air Freshener)", enKw: "Solar Car Air Freshener", price: "$23.99", cost: "¥8.0", margin: "85%", kw: "太阳能战斗机香薰 车载摆件", hook: "🎬 黄金前3秒：车子从地下车库开出见到阳光的一瞬间，仪表台上的战斗机螺旋桨瞬间高速旋转。", audience: "20-45岁男性车主、军事与机械模型迷" },
         { id: 120, category: "Viral", heat: "📈 手机摄影圈层疯传 · 极低退货率", score: 81, sales7d: "4,200 单", roas: "1 : 4.3", title: "手机微距显微镜放大镜夹片 (Phone Micro Lens Clip)", enKw: "Phone Microscope Lens", price: "$18.50", cost: "¥4.0", margin: "88%", kw: "手机微距镜头 夹式高清放大镜", hook: "🎬 黄金前3秒：夹在手机摄像头上直接怼向树叶和钻石，屏幕里瞬间呈现出震撼微观世界。", audience: "摄影爱好者、珠宝鉴定、好奇心青少年" },
         { id: 121, category: "AdSpy", heat: "💰 连续投流 9 天 · 宝妈安防刚需品", score: 83, sales7d: "5,600 单", roas: "1 : 3.7", title: "智能无线温湿度计电子监控钟 (Digital Thermo-Hygrometer)", enKw: "Indoor Thermometer Hygrometer", price: "$19.99", cost: "¥9.0", margin: "77%", kw: "电子温湿度计 室内温湿度监控", hook: "🎬 黄金前3秒：婴儿房宝宝夜里哭闹，宝妈看一眼床头温湿度计发现湿度过低立刻开加湿器。", audience: "新手宝妈、爬宠养殖者、温室绿植玩家" },
@@ -235,7 +202,6 @@
         { id: 124, category: "AdSpy", heat: "💰 换季收纳连续投流 14 天 · 家庭多件购", score: 84, sales7d: "11,800 单", roas: "1 : 4.1", title: "床底透明视窗防尘大容量收纳袋 (Underbed Storage Bags)", enKw: "Under Bed Storage Containers", price: "$18.99", cost: "¥6.5", margin: "86%", kw: "床底收纳箱 衣服换季整理袋", hook: "🎬 黄金前3秒：衣柜塞爆掉下来砸到头，把厚棉被全部装进收纳袋轻松滑入床底隐形。", audience: "换季家庭主妇、小户型公寓收纳控" }
     ];
 
-    // 合并用户历史通过 AI 挖掘沉淀下来的永久爆品池
     let savedCustomItems = JSON.parse(localStorage.getItem('radar_custom_pool_v5') || '[]');
     let masterPool = [...savedCustomItems, ...defaultPool];
 
@@ -264,7 +230,6 @@
         applyFilter();
     }
 
-    // 打开利润与 ROAS 精算器
     function openCalc(title, priceStr, costStr) {
         const p = parseFloat(priceStr.replace(/[^0-9.]/g, '')) || 24.99;
         const c = parseFloat(costStr.replace(/[^0-9.]/g, '')) || 8.0;
@@ -291,15 +256,14 @@
         const netProfitRmb = (netProfitUsd * rate).toFixed(1);
         const monthlyProfitWan = ((netProfitUsd * rate * 100 * 30) / 10000).toFixed(1);
 
-        document.getElementById('rBreakevenRoas').innerText = grossProfitBeforeAdUsd > 0 ? `1 : ${breakevenRoas}` : '亏本定价';
+        document.getElementById('rBreakevenRoas').innerText = grossProfitBeforeAdUsd > 0 ? `1 : ${breakevenRoas}` : '亏本';
         document.getElementById('rActualRoas').innerText = `1 : ${actualRoas}`;
         const netEl = document.getElementById('rNetRmb');
         netEl.innerText = `¥${netProfitRmb}`;
         netEl.className = netProfitUsd >= 0 ? 'green' : 'red';
-        document.getElementById('rMonthly').innerText = netProfitUsd >= 0 ? `¥${monthlyProfitWan}万` : '亏损状态';
+        document.getElementById('rMonthly').innerText = netProfitUsd >= 0 ? `¥${monthlyProfitWan}万` : '亏损';
     }
 
-    // 打开 15秒完整分镜与英文口播弹窗
     function openScriptModal(id) {
         const item = masterPool.find(i => i.id === id);
         if (!item) return;
@@ -315,7 +279,7 @@
     function copyModalScript() {
         const text = document.getElementById('scriptContent').innerText;
         navigator.clipboard.writeText(text);
-        alert('✅ 已复制完整 15 秒分镜与英文口播台词！可直接粘贴至剪映或 ElevenLabs 配音。');
+        alert('✅ 已复制完整 15 秒分镜与英文口播台词！');
     }
 
     function closeModal(id) {
@@ -425,17 +389,16 @@
     function huntCustomNiche() {
         const niche = document.getElementById('nicheInput').value.trim();
         if (!niche) {
-            alert('请先输入你想挖掘的细分赛道关键词（如：万圣节、美甲、钓鱼、宠物...）');
+            alert('请先输入你想挖掘的细分赛道关键词！');
             return;
         }
         fetchAllData(niche);
     }
 
     async function fetchAllData(customNiche = '') {
-        const status = document.getElementById('statusBar');
+        const statusText = document.getElementById('statusText');
         const apiKey = document.getElementById('dsKey').value.trim();
 
-        // 若未指定赛道，先执行本地汰弱留强
         if (!customNiche) {
             masterPool.sort((a, b) => a.score - b.score);
             const lowestItem = masterPool[0];
@@ -452,12 +415,13 @@
         if (apiKey) {
             const targetPrompt = customNiche 
                 ? `请针对【${customNiche}】这个细分赛道，推荐1个当前TikTok美区极具爆发力的新奇特暴利商品。`
-                : `请推荐1个当前TikTok美区极具爆发力的新奇特暴利商品（避开常见普通品）。`;
+                : `请推荐1个当前TikTok美区极具爆发力的新奇特暴利商品。`;
 
-            status.innerHTML = `<span class="cyan">⏳ 正在呼叫 DeepSeek 挖掘${customNiche ? '【'+customNiche+'】赛道' : '全网'}最新投流爆品并永久写入你的选品库...</span>`;
+            if(statusText) statusText.innerHTML = `<span class="cyan">⏳ 正在向 DeepSeek 发起联网请求，挖掘最新爆品...</span>`;
+            
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 9000);
+                const timeoutId = setTimeout(() => controller.abort(), 12000);
 
                 const response = await fetch("https://api.deepseek.com/chat/completions", {
                     method: "POST",
@@ -467,7 +431,7 @@
                     },
                     body: JSON.stringify({
                         model: "deepseek-chat",
-                        messages: [{ role: "user", content: `你现在是TikTok海外广告投流监控专家(Kalodata/PiPiADS)。${targetPrompt}严格只返回JSON格式：{"id":999,"category":"AdSpy","heat":"💰 AI定向挖掘 · 连续投流爆款","score":100,"sales7d":"8,920 单","roas":"1 : 4.8","title":"中文名 (English Name)","enKw":"English Search Keyword","price":"$27.99","cost":"¥9.5","margin":"86%","kw":"1688搜索词","hook":"🎬 黄金前3秒：具体画面镜头与痛点拆解","audience":"精准投流受众人群画像"}` }],
+                        messages: [{ role: "user", content: `你现在是TikTok广告投流专家。${targetPrompt}严格只返回JSON格式：{"id":999,"category":"AdSpy","heat":"💰 AI定向挖掘 · 连续投流爆款","score":100,"sales7d":"8,920 单","roas":"1 : 4.8","title":"中文名 (English Name)","enKw":"English Search Keyword","price":"$27.99","cost":"¥9.5","margin":"86%","kw":"1688搜索词","hook":"🎬 黄金前3秒：具体画面镜头与痛点拆解","audience":"精准投流受众人群画像"}` }],
                         response_format: { type: "json_object" }
                     }),
                     signal: controller.signal
@@ -480,23 +444,26 @@
                 const aiItem = JSON.parse(data.choices[0].message.content);
                 aiItem.id = Date.now();
 
-                // 永久保存到用户的本地扩展爆品库，越用越多！
                 savedCustomItems.unshift(aiItem);
                 localStorage.setItem('radar_custom_pool_v5', JSON.stringify(savedCustomItems));
 
                 masterPool.unshift(aiItem);
                 applyFilter();
 
-                status.innerHTML = `<span class="green">✅ 挖掘成功！新爆品「${aiItem.title}」已置顶并永久存入你的选品库（当前共 ${masterPool.length} 款）！</span>`;
+                if(statusText) statusText.innerHTML = `<span class="green">✅ AI 挖掘成功！新爆品已存入你的专属选品库（当前共 ${masterPool.length} 款）！</span>`;
             } catch (error) {
-                status.innerHTML = `<span class="red">⚠️ API 请求异常（${error.message}），请确认 DeepSeek Key 余额充足。已完成本地高分轮换！</span>`;
+                if(statusText) statusText.innerHTML = `<span class="red">⚠️ API 请求受限或超时（${error.message}），已完成本地轮换。</span>`;
             }
         } else {
-            status.innerHTML = `<span class="gold">💡 提示：在右上角粘贴 DeepSeek API Key 后，即可激活「AI 任意赛道无限裂变挖品」并永久扩充你的爆品库！</span>`;
+            if(statusText) statusText.innerHTML = `<span class="gold">💡 提示：请在右上角粘贴 DeepSeek API Key 才能正式启用 AI 联网实时裂变挖品！</span>`;
         }
+
+        const now = new Date();
+        const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+        const timeEl = document.getElementById('refreshTime');
+        if(timeEl) timeEl.innerText = `更新于: ${timeStr}`;
     }
 
-    // 导出 CSV 报表
     function exportCSV() {
         const headers = ["商品名称,所属榜单,热度表现,7日销量,预估ROAS,海外售价,1688底价,毛利率,1688搜索词,黄金前3秒钩子\n"];
         const rows = masterPool.map(i => `"${i.title}","${i.category}","${i.heat}","${i.sales7d}","${i.roas}","${i.price}","${i.cost}","${i.margin}","${i.kw}","${i.hook}"`);
