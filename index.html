@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok AdSpy Pro - 投流监控与利润精算工作台 v5.1 修复版</title>
+    <title>TikTok AdSpy Pro - 投流监控与精算工作台 v5.2 终极稳定版</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #020617; color: #f8fafc; min-height: 100vh; padding-bottom: 60px; }
@@ -82,7 +82,7 @@
 <header>
     <div class="logo">
         <div class="dot"></div>
-        TIKTOK ADSPY PRO <span class="badge">v5.1 修复版</span>
+        TIKTOK ADSPY PRO <span class="badge">v5.2 稳定版</span>
     </div>
     <div class="ctrl-bar">
         <input type="password" id="dsKey" class="inp" placeholder="粘贴 DeepSeek Key" oninput="saveKey()">
@@ -95,18 +95,17 @@
     <div class="hunter-bar">
         <div class="hunter-left">
             <span style="font-size:13px; font-weight:700; color:#a5b4fc;">🎯 AI 定制赛道挖品：</span>
-            <input type="text" id="nicheInput" class="niche-inp" placeholder="输入赛道（如：万圣节、美甲、钓鱼、露营...）">
+            <input type="text" id="nicheInput" class="niche-inp" placeholder="输入赛道（如：穿戴甲、万圣节、美甲、露营...）">
             <button class="btn-sync" style="background: linear-gradient(90deg, #6366f1, #8b5cf6);" onclick="huntCustomNiche()">🚀 AI 裂变生成</button>
         </div>
         <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
-            <span class="niche-tag" onclick="quickHunt('万圣节/圣诞礼品')">🎃 节日季暴利</span>
+            <span class="niche-tag" onclick="quickHunt('穿戴甲 美甲贴片')">💅 穿戴甲爆款</span>
             <span class="niche-tag" onclick="quickHunt('痛点美妆个护')">💄 痛点美妆</span>
             <span class="niche-tag" onclick="quickHunt('猫咪狗狗奇趣用品')">🐾 萌宠刚需</span>
             <span class="niche-tag" onclick="quickHunt('汽车内饰改装黑科技')">🚗 汽配高毛利</span>
         </div>
     </div>
 
-    <!-- 修复点：确保内部 HTML 结构完整安全 -->
     <div class="status-box" id="statusBar">
         <span id="statusText">💡 系统就绪：支持投流精算与 AI 赛道裂变挖品！</span>
         <span id="refreshTime" class="cyan">总库容量: <b id="totalPoolCount">24</b> 款</span>
@@ -193,7 +192,7 @@
         { id: 115, category: "AdSpy", heat: "💰 连续投流 11 天 · 独立站捆绑销售王", score: 85, sales7d: "11,200 单", roas: "1 : 5.0", title: "车载宠物防跳车安全带 (Dog Car Seat Belt Tether)", enKw: "Dog Car Seat Belt", price: "$12.99", cost: "¥2.5", margin: "90%", kw: "宠物车载安全带 狗狗牵引绳", hook: "🎬 黄金前3秒：急刹车时后座狗狗往前冲的惊险画面，切到扣上安全带稳稳坐在后排。", audience: "欧美养犬车主（通常一次买2-3条）" },
         { id: 116, category: "Creator", heat: "👑 备菜神器达人刷屏 · 复购率极高", score: 84, sales7d: "10,500 单", roas: "1 : 3.6", title: "多功能不锈钢按压切菜器 (Vegetable Chopper Mandoline)", enKw: "Vegetable Chopper", price: "$28.99", cost: "¥13.5", margin: "80%", kw: "多功能切菜器 厨房切丝切片器", hook: "🎬 黄金前3秒：切洋葱辣得满脸泪水，放进切菜器手起盖落1秒变成整齐洋葱丁。", audience: "家庭烹饪人群、健身备餐（Meal Prep）爱好者" },
         { id: 117, category: "Viral", heat: "📈 居家小改造 390万播放 · 零差评普货", score: 83, sales7d: "7,900 单", roas: "1 : 4.5", title: "水龙头 360 度万向机械臂起泡器 (Swivel Faucet Extender)", enKw: "Swivel Faucet Aerator", price: "$13.99", cost: "¥3.0", margin: "90%", kw: "水龙头万向节 延长起泡器", hook: "🎬 黄金前3秒：拧上万向节后，水柱像喷泉一样朝上直接漱口洗脸，不用再低头捧水。", audience: "居家DIY爱好者、老旧房屋租客" },
-        { id: 118, category: "AdSpy", heat: "💰 连续投流 16 天 · 极客办公高转化", score: 82, sales7d: "4,900 单", roas: "1 : 3.9", title: "笔记本背面隐形折叠支架 (Invisible Laptop Stand)", enKw: "Invisible Laptop Stand", price: "$14.99", cost: "¥3.5", margin: "87%", kw: "笔记本电脑隐形支架 散热垫", hook: "🎬 黄金前3秒：从咖啡厅合上电脑直接塞进薄包，拿外面手指一拨1秒支起黄金15度仰角。", audience: "数字游民、程序员、大学生" },
+        { id: 118, category: "AdSpy", heat: "💰 连续投流 16 天 · 极客办公高转化", score: 82, sales7d: "4,900 单", roas: "1 : 3.9", title: "笔记本背面隐形折叠支架 (Invisible Laptop Stand)", enKw: "Invisible Laptop Stand", price: "$14.99", cost: "¥3.5", margin: "87%", kw: "笔记本电脑隐形支架 散热垫", hook: "🎬 黄金前3秒：从咖啡厅合上电脑直接塞进薄包，拿出来手指一拨1秒支起黄金15度仰角。", audience: "数字游民、程序员、大学生" },
         { id: 119, category: "Creator", heat: "👑 汽车内饰改装热榜 · 男性转化率超强", score: 86, sales7d: "6,300 单", roas: "1 : 4.2", title: "车载太阳能旋转飞机香薰 (Solar Plane Car Air Freshener)", enKw: "Solar Car Air Freshener", price: "$23.99", cost: "¥8.0", margin: "85%", kw: "太阳能战斗机香薰 车载摆件", hook: "🎬 黄金前3秒：车子从地下车库开出见到阳光的一瞬间，仪表台上的战斗机螺旋桨瞬间高速旋转。", audience: "20-45岁男性车主、军事与机械模型迷" },
         { id: 120, category: "Viral", heat: "📈 手机摄影圈层疯传 · 极低退货率", score: 81, sales7d: "4,200 单", roas: "1 : 4.3", title: "手机微距显微镜放大镜夹片 (Phone Micro Lens Clip)", enKw: "Phone Microscope Lens", price: "$18.50", cost: "¥4.0", margin: "88%", kw: "手机微距镜头 夹式高清放大镜", hook: "🎬 黄金前3秒：夹在手机摄像头上直接怼向树叶和钻石，屏幕里瞬间呈现出震撼微观世界。", audience: "摄影爱好者、珠宝鉴定、好奇心青少年" },
         { id: 121, category: "AdSpy", heat: "💰 连续投流 9 天 · 宝妈安防刚需品", score: 83, sales7d: "5,600 单", roas: "1 : 3.7", title: "智能无线温湿度计电子监控钟 (Digital Thermo-Hygrometer)", enKw: "Indoor Thermometer Hygrometer", price: "$19.99", cost: "¥9.0", margin: "77%", kw: "电子温湿度计 室内温湿度监控", hook: "🎬 黄金前3秒：婴儿房宝宝夜里哭闹，宝妈看一眼床头温湿度计发现湿度过低立刻开加湿器。", audience: "新手宝妈、爬宠养殖者、温室绿植玩家" },
@@ -211,8 +210,10 @@
     updateFavCount();
 
     function updateFavCount() {
-        document.getElementById('favCount').innerText = favorites.length;
-        document.getElementById('totalPoolCount').innerText = masterPool.length;
+        const favEl = document.getElementById('favCount');
+        const totalEl = document.getElementById('totalPoolCount');
+        if(favEl) favEl.innerText = favorites.length;
+        if(totalEl) totalEl.innerText = masterPool.length;
     }
 
     function setItemStatus(id, val) {
@@ -356,7 +357,8 @@
     }
 
     function applyFilter() {
-        const keyword = document.getElementById('searchInput').value.toLowerCase().trim();
+        const searchInput = document.getElementById('searchInput');
+        const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
         let list = [...masterPool];
 
         if (currentCategory === 'fav') {
@@ -382,12 +384,14 @@
     }
 
     function quickHunt(niche) {
-        document.getElementById('nicheInput').value = niche;
+        const nicheInput = document.getElementById('nicheInput');
+        if(nicheInput) nicheInput.value = niche;
         huntCustomNiche();
     }
 
     function huntCustomNiche() {
-        const niche = document.getElementById('nicheInput').value.trim();
+        const nicheInput = document.getElementById('nicheInput');
+        const niche = nicheInput ? nicheInput.value.trim() : '';
         if (!niche) {
             alert('请先输入你想挖掘的细分赛道关键词！');
             return;
@@ -397,7 +401,8 @@
 
     async function fetchAllData(customNiche = '') {
         const statusText = document.getElementById('statusText');
-        const apiKey = document.getElementById('dsKey').value.trim();
+        const dsKeyInput = document.getElementById('dsKey');
+        const apiKey = dsKeyInput ? dsKeyInput.value.trim() : '';
 
         if (!customNiche) {
             masterPool.sort((a, b) => a.score - b.score);
@@ -417,11 +422,11 @@
                 ? `请针对【${customNiche}】这个细分赛道，推荐1个当前TikTok美区极具爆发力的新奇特暴利商品。`
                 : `请推荐1个当前TikTok美区极具爆发力的新奇特暴利商品。`;
 
-            if(statusText) statusText.innerHTML = `<span class="cyan">⏳ 正在向 DeepSeek 发起联网请求，挖掘最新爆品...</span>`;
+            if(statusText) statusText.innerHTML = `<span class="cyan">⏳ 正在向 DeepSeek 发起联网请求，挖掘「${customNiche || '全网投流'}」爆品...</span>`;
             
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 12000);
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
 
                 const response = await fetch("https://api.deepseek.com/chat/completions", {
                     method: "POST",
@@ -438,7 +443,7 @@
                 });
 
                 clearTimeout(timeoutId);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                if (!response.ok) throw new Error(`HTTP状态码 ${response.status}`);
 
                 const data = await response.json();
                 const aiItem = JSON.parse(data.choices[0].message.content);
@@ -450,12 +455,12 @@
                 masterPool.unshift(aiItem);
                 applyFilter();
 
-                if(statusText) statusText.innerHTML = `<span class="green">✅ AI 挖掘成功！新爆品已存入你的专属选品库（当前共 ${masterPool.length} 款）！</span>`;
+                if(statusText) statusText.innerHTML = `<span class="green">✅ 成功裂变生成「${aiItem.title}」并存入你的专属选品库（当前共 ${masterPool.length} 款）！</span>`;
             } catch (error) {
-                if(statusText) statusText.innerHTML = `<span class="red">⚠️ API 请求受限或超时（${error.message}），已完成本地轮换。</span>`;
+                if(statusText) statusText.innerHTML = `<span class="red">⚠️ AI生成提示：${error.message}。已自动切回本地候选池为您补充爆品。</span>`;
             }
         } else {
-            if(statusText) statusText.innerHTML = `<span class="gold">💡 提示：请在右上角粘贴 DeepSeek API Key 才能正式启用 AI 联网实时裂变挖品！</span>`;
+            if(statusText) statusText.innerHTML = `<span class="gold">💡 提示：请在右上角粘贴 DeepSeek API Key 才能正式启用 AI 实时裂变挖品！</span>`;
         }
 
         const now = new Date();
