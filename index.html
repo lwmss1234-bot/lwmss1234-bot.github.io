@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok AdSpy Pro - 投流监控与精算工作台 v5.2 终极稳定版</title>
+    <title>TikTok AdSpy Pro - 全球跨境投流爆品雷达站 v6.0</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #020617; color: #f8fafc; min-height: 100vh; padding-bottom: 60px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #020617; color: #f8fafc; min-height: 100vh; padding-bottom: 40px; }
         header { border-bottom: 1px solid #1e293b; background: rgba(15, 23, 42, 0.96); padding: 14px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 50; backdrop-filter: blur(8px); }
         .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; letter-spacing: 0.5px; }
         .dot { width: 10px; height: 10px; background-color: #fe2c55; border-radius: 50%; box-shadow: 0 0 12px #fe2c55; }
@@ -20,6 +20,12 @@
         .btn-export:hover { background: #334155; }
 
         main { max-width: 1280px; margin: 0 auto; padding: 22px 16px; }
+
+        /* 顶部大盘 Dashboard */
+        .dash-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 18px; }
+        .dash-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 10px; padding: 14px; text-align: center; }
+        .dash-title { font-size: 12px; color: #94a3b8; margin-bottom: 4px; }
+        .dash-num { font-size: 20px; font-weight: 800; color: #fff; }
         
         .hunter-bar { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); border: 1px solid #312e81; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
         .hunter-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex: 1; }
@@ -34,9 +40,13 @@
         .filter-btn { background: #0f172a; color: #94a3b8; border: 1px solid #1e293b; padding: 8px 13px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; transition: 0.2s; }
         .filter-btn:hover, .filter-btn.active { background: #fe2c55; color: white; border-color: #fe2c55; }
 
-        .item-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 18px; transition: border 0.2s; }
+        /* 卡片主体布局（含图片） */
+        .item-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 18px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 16px; transition: border 0.2s; }
         .item-card:hover { border-color: #475569; }
         @media (min-width: 880px) { .item-card { flex-direction: row; justify-content: space-between; align-items: stretch; } }
+
+        .prod-img { width: 100%; max-width: 160px; height: 160px; object-fit: cover; border-radius: 8px; border: 1px solid #1e293b; flex-shrink: 0; background: #020617; }
+        .card-main { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
 
         .tag { font-size: 12px; padding: 3px 8px; border-radius: 4px; font-weight: 600; display: inline-block; margin-bottom: 8px; margin-right: 6px; }
         .tag-ad { background: rgba(254, 44, 85, 0.15); color: #ff6b8b; border: 1px solid rgba(254, 44, 85, 0.4); }
@@ -44,20 +54,20 @@
         .tag-roas { background: #1e293b; color: #fcd34d; border: 1px solid #334155; }
         .status-select { background: #1e293b; color: #38bdf8; border: 1px solid #334155; border-radius: 4px; padding: 2px 6px; font-size: 12px; font-weight: 600; cursor: pointer; outline: none; }
 
-        h3 { font-size: 18px; margin-bottom: 10px; color: #fff; }
+        h3 { font-size: 17px; margin-bottom: 8px; color: #fff; }
         .script-box { background: #020617; border: 1px solid #1e293b; border-left: 3px solid #25f4ee; padding: 10px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 13px; color: #e2e8f0; line-height: 1.5; }
-        .metrics-row { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: #94a3b8; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #1e293b; align-items: center; }
+        .metrics-row { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: #94a3b8; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #1e293b; align-items: center; }
 
-        .right-box { border-top: 1px solid #1e293b; padding-top: 14px; display: flex; flex-direction: column; justify-content: space-between; min-width: 250px; }
-        @media (min-width: 880px) { .right-box { border-top: none; border-left: 1px solid #1e293b; padding-top: 0; padding-left: 22px; text-align: right; } }
+        .right-box { border-top: 1px solid #1e293b; padding-top: 14px; display: flex; flex-direction: column; justify-content: space-between; min-width: 240px; }
+        @media (min-width: 880px) { .right-box { border-top: none; border-left: 1px solid #1e293b; padding-top: 0; padding-left: 20px; text-align: right; } }
 
-        .btn-group { display: flex; flex-direction: column; gap: 7px; margin-top: 10px; }
-        .btn-calc { background: linear-gradient(90deg, #f59e0b, #d97706); color: #020617; padding: 9px 12px; border-radius: 6px; font-weight: 800; border: none; font-size: 12px; text-align: center; cursor: pointer; }
+        .btn-group { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+        .btn-calc { background: linear-gradient(90deg, #f59e0b, #d97706); color: #020617; padding: 8px 12px; border-radius: 6px; font-weight: 800; border: none; font-size: 12px; text-align: center; cursor: pointer; }
         .btn-calc:hover { opacity: 0.92; }
-        .btn-tt { background: linear-gradient(90deg, #fe2c55, #d91b42); color: white; padding: 8px 12px; border-radius: 6px; font-weight: 700; text-decoration: none; font-size: 12px; text-align: center; display: block; }
-        .btn-1688 { background: #059669; color: white; padding: 8px 12px; border-radius: 6px; font-weight: 600; text-decoration: none; font-size: 12px; text-align: center; display: block; }
+        .btn-tt { background: linear-gradient(90deg, #fe2c55, #d91b42); color: white; padding: 7px 12px; border-radius: 6px; font-weight: 700; text-decoration: none; font-size: 12px; text-align: center; display: block; }
+        .btn-1688 { background: #059669; color: white; padding: 7px 12px; border-radius: 6px; font-weight: 600; text-decoration: none; font-size: 12px; text-align: center; display: block; }
         .row-btns { display: flex; gap: 6px; }
-        .btn-sub { background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 7px 8px; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 11px; flex: 1; text-align: center; text-decoration: none; }
+        .btn-sub { background: #1e293b; color: #cbd5e1; border: 1px solid #334155; padding: 6px 8px; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 11px; flex: 1; text-align: center; text-decoration: none; }
         .btn-sub:hover { background: #334155; color: white; }
         .btn-fav-active { background: #7f1d1d !important; color: #fca5a5 !important; border-color: #991b1b !important; }
 
@@ -71,6 +81,8 @@
         .calc-result { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .res-box { text-align: center; padding: 8px; border-radius: 6px; background: #0f172a; }
 
+        footer { text-align: center; padding: 24px 16px; border-top: 1px solid #1e293b; margin-top: 40px; font-size: 12px; color: #64748b; }
+
         .cyan { color: #25f4ee; }
         .green { color: #34d399; }
         .red { color: #f87171; }
@@ -82,7 +94,7 @@
 <header>
     <div class="logo">
         <div class="dot"></div>
-        TIKTOK ADSPY PRO <span class="badge">v5.2 稳定版</span>
+        TIKTOK ADSPY PRO <span class="badge">v6.0 上线预备版</span>
     </div>
     <div class="ctrl-bar">
         <input type="password" id="dsKey" class="inp" placeholder="粘贴 DeepSeek Key" oninput="saveKey()">
@@ -92,6 +104,26 @@
 </header>
 
 <main>
+    <!-- 顶部大盘 Dashboard -->
+    <div class="dash-board">
+        <div class="dash-card">
+            <div class="dash-title">今日监控 TikTok 广告数</div>
+            <div class="dash-num cyan">18,420 条</div>
+        </div>
+        <div class="dash-card">
+            <div class="dash-title">全网高毛利爆品库容量</div>
+            <div class="dash-num gold" id="dashTotalCount">24 款</div>
+        </div>
+        <div class="dash-card">
+            <div class="dash-title">大盘平均投流 ROAS</div>
+            <div class="dash-num green">1 : 4.35</div>
+        </div>
+        <div class="dash-card">
+            <div class="dash-title">实时爆发赛道</div>
+            <div class="dash-num" style="color:#a5b4fc; font-size:16px;">💅 穿戴甲 / 🎃 节日季</div>
+        </div>
+    </div>
+
     <div class="hunter-bar">
         <div class="hunter-left">
             <span style="font-size:13px; font-weight:700; color:#a5b4fc;">🎯 AI 定制赛道挖品：</span>
@@ -107,8 +139,8 @@
     </div>
 
     <div class="status-box" id="statusBar">
-        <span id="statusText">💡 系统就绪：支持投流精算与 AI 赛道裂变挖品！</span>
-        <span id="refreshTime" class="cyan">总库容量: <b id="totalPoolCount">24</b> 款</span>
+        <span id="statusText">💡 系统就绪：支持投流精算、视觉图谱与 AI 赛道裂变挖品！</span>
+        <span id="refreshTime" class="cyan">状态: 在线</span>
     </div>
 
     <div class="toolbar">
@@ -124,7 +156,6 @@
     <div id="listContainer"></div>
 </main>
 
-<!-- 弹窗1：投流回本精算器 -->
 <div class="modal-mask" id="calcModal">
     <div class="modal-card">
         <div class="modal-head">
@@ -149,7 +180,6 @@
     </div>
 </div>
 
-<!-- 弹窗2：脚本工作台 -->
 <div class="modal-mask" id="scriptModal">
     <div class="modal-card">
         <div class="modal-head">
@@ -161,6 +191,11 @@
     </div>
 </div>
 
+<footer>
+    <p>© 2026 TikTok AdSpy Pro. All rights reserved.</p>
+    <p style="margin-top:6px; font-size:11px; color:#475569;">Disclaimer: This platform is an independent analytics tool and is not affiliated with or endorsed by TikTok, ByteDance, 1688, or Amazon.</p>
+</footer>
+
 <script>
     document.getElementById('dsKey').value = localStorage.getItem('radar_ds_key') || '';
     function saveKey() {
@@ -168,37 +203,15 @@
     }
 
     const candidatePool = [
-        { id: 301, category: "AdSpy", heat: "💰 连续投流 19 天 · 广告消耗 $3.2W", score: 96, sales7d: "6,420 单", roas: "1 : 4.5", title: "宠物自动饮水机防溅硅胶垫 (Pet Water Fountain Mat)", enKw: "Pet Water Fountain Mat", price: "$16.99", cost: "¥4.5", margin: "88%", kw: "宠物防水硅胶垫 狗碗猫碗垫", hook: "🎬 黄金前3秒：金毛喝水甩得满地水渍木地板发黑，随后铺上硅胶垫瞬间滴水不漏。", audience: "北美 25-50 岁养狗家庭 / 居家清洁受众" },
-        { id: 302, category: "Viral", heat: "📈 TikTok 单条视频 480万播放 · 完播率 42%", score: 95, sales7d: "5,190 单", roas: "1 : 5.1", title: "电动旋转红酒醒酒器 (Electric Wine Aerator Dispenser)", enKw: "Electric Wine Aerator", price: "$29.99", cost: "¥12.0", margin: "82%", kw: "电动醒酒器 自动倒酒器 红酒器具", hook: "🎬 黄金前3秒：家庭派对倒酒洒在白桌布上 vs 一键按压红酒优雅注入高脚杯特写。", audience: "欧美 28-55 岁红酒爱好者 / 节日送礼人群" },
-        { id: 303, category: "Creator", heat: "👑 380位美区达人密集挂车 · 周增 +510%", score: 93, sales7d: "8,300 单", roas: "1 : 3.9", title: "多功能车载座椅缝隙收纳盒 (Car Seat Gap Organizer)", enKw: "Car Seat Gap Organizer", price: "$19.99", cost: "¥6.0", margin: "89%", kw: "汽车座椅缝隙收纳盒 车载储物盒", hook: "🎬 黄金前3秒：开车时手机掉进座椅缝隙伸手去捞差点追尾（惊险音效），立刻塞入收纳盒。", audience: "全美有车一族 / 20-55岁男性车主为主" },
-        { id: 304, category: "AdSpy", heat: "💰 独立站+TT双投流 · 7日消耗 $2.4W", score: 94, sales7d: "4,150 单", roas: "1 : 3.8", title: "便携式折叠太阳能充电板 (Foldable Solar Panel Charger)", enKw: "Foldable Solar Charger", price: "$45.99", cost: "¥32.0", margin: "75%", kw: "太阳能折叠充电板 户外露营装备", hook: "🎬 黄金前3秒：荒野露营手机关机黑屏，展开背包上的太阳能板秒亮充电图标。", audience: "欧美户外露营 / 徒步生存狂热爱好者" }
+        { id: 301, img: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=300&auto=format&fit=crop&q=80", category: "AdSpy", heat: "💰 连续投流 19 天 · 广告消耗 $3.2W", score: 96, sales7d: "6,420 单", roas: "1 : 4.5", title: "宠物自动饮水机防溅硅胶垫 (Pet Water Fountain Mat)", enKw: "Pet Water Fountain Mat", price: "$16.99", cost: "¥4.5", margin: "88%", kw: "宠物防水硅胶垫 狗碗猫碗垫", hook: "🎬 黄金前3秒：金毛喝水甩得满地水渍木地板发黑，随后铺上硅胶垫瞬间滴水不漏。", audience: "北美 25-50 岁养狗家庭 / 居家清洁受众" },
+        { id: 302, img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=300&auto=format&fit=crop&q=80", category: "Viral", heat: "📈 TikTok 单条视频 480万播放 · 完播率 42%", score: 95, sales7d: "5,190 单", roas: "1 : 5.1", title: "电动旋转红酒醒酒器 (Electric Wine Aerator Dispenser)", enKw: "Electric Wine Aerator", price: "$29.99", cost: "¥12.0", margin: "82%", kw: "电动醒酒器 自动倒酒器 红酒器具", hook: "🎬 黄金前3秒：家庭派对倒酒洒在白桌布上 vs 一键按压红酒优雅注入高脚杯特写。", audience: "欧美 28-55 岁红酒爱好者 / 节日送礼人群" }
     ];
 
     const defaultPool = [
-        { id: 101, category: "AdSpy", heat: "💰 连续投流 22 天 · 预估消耗 $4.5W+", score: 99, sales7d: "12,400 单", roas: "1 : 4.8", title: "太空舱猫咪外出双肩包 (Bubble Cat Backpack Carrier)", enKw: "Bubble Cat Backpack", price: "$39.99", cost: "¥29.0", margin: "84%", kw: "太空舱猫包 跨境 透明宠物双肩包", hook: "🎬 黄金前3秒：猫咪在透明太空罩里好奇张望，路人纷纷回头拍照（超高自然互动率）。", audience: "美区/英区 18-38 岁养猫女性、公寓青年" },
-        { id: 102, category: "Viral", heat: "📈 TikTok #CleanTok 霸榜 · 播放破千万", score: 97, sales7d: "15,800 单", roas: "1 : 6.2", title: "汽车挡风玻璃除油膜清洁刷 (Windshield Oil Film Cleaner)", enKw: "Windshield Oil Film Cleaner", price: "$18.99", cost: "¥5.8", margin: "89%", kw: "汽车玻璃油膜擦 除油膜清洁刷", hook: "🎬 黄金前3秒：大雨天夜间开车对向车灯炫光一片模糊，用刷子一划瞬间高清透亮对比。", audience: "北美全体车主 / 汽配高频刚需人群（常买二送一）" },
-        { id: 103, category: "Creator", heat: "👑 620+ 健身达人挂车 · 佣金比例 20%", score: 95, sales7d: "9,650 单", roas: "1 : 4.1", title: "磁吸手机支架健身水杯 (Magnetic Gym Water Bottle)", enKw: "Magnetic Gym Water Bottle", price: "$36.99", cost: "¥28.0", margin: "82%", kw: "磁吸手机支架水杯 跨境 运动水壶", hook: "🎬 黄金前3秒：在健身房拿鞋子和哑铃垫手机自拍滑倒，随后啪的一声手机磁吸在水壶上任意旋转。", audience: "欧美 18-35 岁健身房常客、运动自拍达人" },
-        { id: 104, category: "Viral", heat: "📈 ASMR 解压直播间引流王 · 转化率 8.4%", score: 96, sales7d: "21,300 单", roas: "1 : 5.5", title: "捏捏乐高颜值猫爪发泄玩具 (Taba Squishy Cat Paw Toy)", enKw: "Taba Squishy Paw", price: "$9.99", cost: "¥1.5", margin: "92%", kw: "TPR软胶捏捏乐 猫爪发泄解压玩具", hook: "🎬 黄金前3秒：收音麦克风贴近，手指揉捏果冻质感猫爪发出极致治愈黏腻声（前3秒留存率75%）。", audience: "Z世代青少年、高压白领、ASMR重度受众" },
-        { id: 105, category: "AdSpy", heat: "💰 连续投流 18 天 · 独立站爆单王", score: 94, sales7d: "7,400 单", roas: "1 : 4.3", title: "宠物爪子免洗旋转清洁杯 (Dog Paw Cleaner Cup)", enKw: "Dog Paw Cleaner Cup", price: "$19.99", cost: "¥6.5", margin: "88%", kw: "宠物洗脚杯 狗狗洗爪器 硅胶", hook: "🎬 黄金前3秒：遛狗回来满爪泥巴正要踩上白色地毯，主人1秒套上洗脚杯转两下拔出来干干净净。", audience: "北美独栋带院子养犬家庭" },
-        { id: 106, category: "Creator", heat: "👑 厨房类目带货榜 #1 · 周销破万", score: 93, sales7d: "14,200 单", roas: "1 : 4.6", title: "厨房按压式喷倒两用油瓶 (2-in-1 Glass Oil Sprayer)", enKw: "2 in 1 Oil Dispenser Sprayer", price: "$16.99", cost: "¥7.2", margin: "83%", kw: "喷倒两用油壶 空气炸锅喷油瓶", hook: "🎬 黄金前3秒：空气炸锅烤牛排倒油太多变成油泡，换成雾化喷油壶轻轻一按均匀成雾。", audience: "欧美家庭主妇、空气炸锅使用者、减脂健身人群" },
-        { id: 107, category: "AdSpy", heat: "💰 连续投流 15 天 · 礼品季高溢价", score: 91, sales7d: "5,890 单", roas: "1 : 3.9", title: "火焰光影香薰加湿器 (Flame Aroma Diffuser Humidifier)", enKw: "Flame Air Diffuser", price: "$32.00", cost: "¥22.0", margin: "76%", kw: "火焰加湿器 香薰机 跨境爆款", hook: "🎬 黄金前3秒：关掉房间所有灯，加湿器冒出逼真火苗，手指直接穿过火焰毫发无损（引发评论区疯狂追问）。", audience: "居家氛围控、卧室改造、大学生宿舍群体" },
-        { id: 108, category: "Viral", heat: "📈 奇趣黑科技 650万播放 · 评论区求链接", score: 90, sales7d: "6,120 单", roas: "1 : 4.4", title: "自动搅拌懒人磁力咖啡杯 (Self Stirring Magnetic Mug)", enKw: "Self Stirring Mug", price: "$26.99", cost: "¥15.5", margin: "81%", kw: "自动搅拌杯 磁力咖啡杯 跨境", hook: "🎬 黄金前3秒：倒进浓稠蛋白粉，不拿勺子，手指轻触杯柄瞬间卷起超强龙卷风漩涡。", audience: "办公室白领、健身喝蛋白粉人群、新奇特送礼" },
-        { id: 109, category: "AdSpy", heat: "💰 连续投流 12 天 · 极低成本暴利引流", score: 89, sales7d: "18,500 单", roas: "1 : 5.8", title: "汽车出风口死角除尘软胶泥 (Car Cleaning Putty Gel)", enKw: "Car Cleaning Gel Putty", price: "$9.99", cost: "¥1.8", margin: "92%", kw: "键盘清洁软胶 汽车出风口除尘胶", hook: "🎬 黄金前3秒：将一团蓝色软胶狠狠按进满是陈年老灰的汽车空调口，撕开瞬间灰尘全被拔出。", audience: "强迫症清洁控、车主、机械键盘玩家" },
-        { id: 110, category: "Creator", heat: "👑 美区主妇达人测评爆款 · 转化率 6.9%", score: 92, sales7d: "8,740 单", roas: "1 : 4.2", title: "全自动旋转水果削皮机 (Electric Rotating Fruit Peeler)", enKw: "Electric Fruit Peeler", price: "$24.99", cost: "¥11.0", margin: "85%", kw: "电动削皮机 自动水果削皮刀", hook: "🎬 黄金前3秒：一颗坑洼的土豆插上去，按下按钮5秒钟一条完整不断的土豆皮丝滑脱落。", audience: "欧美大家庭备餐主妇、关节不便长辈" },
-        { id: 111, category: "Viral", heat: "📈 夜景短视频百万点赞 · 完播率 51%", score: 88, sales7d: "7,300 单", roas: "1 : 4.0", title: "LED 感应发光回旋解压飞盘 (LED Flying Saucer Gyro)", enKw: "LED Flying Spinner", price: "$22.50", cost: "¥8.5", margin: "85%", kw: "发光回旋飞盘 感应飞行球 跨境玩具", hook: "🎬 黄金前3秒：黑夜草坪向空中甩出霓虹光球，它竟然像魔法一样自己原路飞回手心。", audience: "欧美父母买给孩子、青少年户外派对" },
-        { id: 112, category: "AdSpy", heat: "💰 痛点保健品类 · 连续投流 26 天", score: 91, sales7d: "6,800 单", roas: "1 : 4.7", title: "足底筋膜炎深层按摩滚轮 (Foot Massage Roller)", enKw: "Foot Massage Roller", price: "$16.50", cost: "¥4.2", margin: "87%", kw: "足部按摩滚轮 筋膜球 瑜伽放松", hook: "🎬 黄金前3秒：护士/服务员下班脱掉鞋子捏着红肿脚底叹气，踩上滚轮发出舒适长叹。", audience: "北美护士、教师、仓库工人等长期站立人群" },
-        { id: 113, category: "Creator", heat: "👑 浴室收纳改造热榜 · 290位达人带货", score: 87, sales7d: "9,100 单", roas: "1 : 3.8", title: "壁挂式自动挤牙膏器套装 (Auto Toothpaste Dispenser)", enKw: "Automatic Toothpaste Dispenser", price: "$15.99", cost: "¥4.8", margin: "87%", kw: "自动挤牙膏器 壁挂置物架", hook: "🎬 黄金前3秒：熊孩子把牙膏挤得洗漱台到处都是，换上壁挂神器牙刷一推定量出膏。", audience: "有孩家庭、租房浴室收纳改造人群" },
-        { id: 114, category: "Viral", heat: "📈 视觉系颜值爆款 · 单视频带货 $8W+", score: 86, sales7d: "5,400 单", roas: "1 : 4.1", title: "日落夕阳氛围投影灯 (Sunset Projection Lamp)", enKw: "Sunset Lamp", price: "$21.99", cost: "¥7.5", margin: "83%", kw: "日落灯 氛围投影小夜灯 网红灯", hook: "🎬 黄金前3秒：单调白墙出租屋，打开开关一秒变成加州橘色浪漫落日大片。", audience: "16-28岁女性、短视频自拍博主、情侣" },
-        { id: 115, category: "AdSpy", heat: "💰 连续投流 11 天 · 独立站捆绑销售王", score: 85, sales7d: "11,200 单", roas: "1 : 5.0", title: "车载宠物防跳车安全带 (Dog Car Seat Belt Tether)", enKw: "Dog Car Seat Belt", price: "$12.99", cost: "¥2.5", margin: "90%", kw: "宠物车载安全带 狗狗牵引绳", hook: "🎬 黄金前3秒：急刹车时后座狗狗往前冲的惊险画面，切到扣上安全带稳稳坐在后排。", audience: "欧美养犬车主（通常一次买2-3条）" },
-        { id: 116, category: "Creator", heat: "👑 备菜神器达人刷屏 · 复购率极高", score: 84, sales7d: "10,500 单", roas: "1 : 3.6", title: "多功能不锈钢按压切菜器 (Vegetable Chopper Mandoline)", enKw: "Vegetable Chopper", price: "$28.99", cost: "¥13.5", margin: "80%", kw: "多功能切菜器 厨房切丝切片器", hook: "🎬 黄金前3秒：切洋葱辣得满脸泪水，放进切菜器手起盖落1秒变成整齐洋葱丁。", audience: "家庭烹饪人群、健身备餐（Meal Prep）爱好者" },
-        { id: 117, category: "Viral", heat: "📈 居家小改造 390万播放 · 零差评普货", score: 83, sales7d: "7,900 单", roas: "1 : 4.5", title: "水龙头 360 度万向机械臂起泡器 (Swivel Faucet Extender)", enKw: "Swivel Faucet Aerator", price: "$13.99", cost: "¥3.0", margin: "90%", kw: "水龙头万向节 延长起泡器", hook: "🎬 黄金前3秒：拧上万向节后，水柱像喷泉一样朝上直接漱口洗脸，不用再低头捧水。", audience: "居家DIY爱好者、老旧房屋租客" },
-        { id: 118, category: "AdSpy", heat: "💰 连续投流 16 天 · 极客办公高转化", score: 82, sales7d: "4,900 单", roas: "1 : 3.9", title: "笔记本背面隐形折叠支架 (Invisible Laptop Stand)", enKw: "Invisible Laptop Stand", price: "$14.99", cost: "¥3.5", margin: "87%", kw: "笔记本电脑隐形支架 散热垫", hook: "🎬 黄金前3秒：从咖啡厅合上电脑直接塞进薄包，拿出来手指一拨1秒支起黄金15度仰角。", audience: "数字游民、程序员、大学生" },
-        { id: 119, category: "Creator", heat: "👑 汽车内饰改装热榜 · 男性转化率超强", score: 86, sales7d: "6,300 单", roas: "1 : 4.2", title: "车载太阳能旋转飞机香薰 (Solar Plane Car Air Freshener)", enKw: "Solar Car Air Freshener", price: "$23.99", cost: "¥8.0", margin: "85%", kw: "太阳能战斗机香薰 车载摆件", hook: "🎬 黄金前3秒：车子从地下车库开出见到阳光的一瞬间，仪表台上的战斗机螺旋桨瞬间高速旋转。", audience: "20-45岁男性车主、军事与机械模型迷" },
-        { id: 120, category: "Viral", heat: "📈 手机摄影圈层疯传 · 极低退货率", score: 81, sales7d: "4,200 单", roas: "1 : 4.3", title: "手机微距显微镜放大镜夹片 (Phone Micro Lens Clip)", enKw: "Phone Microscope Lens", price: "$18.50", cost: "¥4.0", margin: "88%", kw: "手机微距镜头 夹式高清放大镜", hook: "🎬 黄金前3秒：夹在手机摄像头上直接怼向树叶和钻石，屏幕里瞬间呈现出震撼微观世界。", audience: "摄影爱好者、珠宝鉴定、好奇心青少年" },
-        { id: 121, category: "AdSpy", heat: "💰 连续投流 9 天 · 宝妈安防刚需品", score: 83, sales7d: "5,600 单", roas: "1 : 3.7", title: "智能无线温湿度计电子监控钟 (Digital Thermo-Hygrometer)", enKw: "Indoor Thermometer Hygrometer", price: "$19.99", cost: "¥9.0", margin: "77%", kw: "电子温湿度计 室内温湿度监控", hook: "🎬 黄金前3秒：婴儿房宝宝夜里哭闹，宝妈看一眼床头温湿度计发现湿度过低立刻开加湿器。", audience: "新手宝妈、爬宠养殖者、温室绿植玩家" },
-        { id: 122, category: "Creator", heat: "👑 电竞房改造必推款 · 达人挂车 410+", score: 80, sales7d: "8,900 单", roas: "1 : 4.0", title: "电脑显示器声控 RGB 氛围灯带 (RGB Gaming Monitor Light)", enKw: "RGB Monitor Light Strip", price: "$15.99", cost: "¥4.5", margin: "88%", kw: "电脑显示器背光灯带 RGB灯条", hook: "🎬 黄金前3秒：敲击机械键盘的一瞬间，显示器背后的霓虹灯光随着节奏疯狂律动闪烁。", audience: "电竞游戏玩家、Twitch主播、桌搭爱好者" },
-        { id: 123, category: "Viral", heat: "📈 园艺频道爆款 · 客单常买 12 个装", score: 79, sales7d: "9,400 单", roas: "1 : 4.9", title: "自动滴灌植物懒人浇水器 (Self Watering Plant Spikes)", enKw: "Self Watering Spikes", price: "$11.99", cost: "¥2.2", margin: "91%", kw: "自动浇花器 懒人滴灌器 园艺工具", hook: "🎬 黄金前3秒：度假回来邻居家花全枯了，自己家矿泉水瓶倒插在花盆里依然绿油油。", audience: "欧美庭院园艺爱好者、经常出差的白领" },
-        { id: 124, category: "AdSpy", heat: "💰 换季收纳连续投流 14 天 · 家庭多件购", score: 84, sales7d: "11,800 单", roas: "1 : 4.1", title: "床底透明视窗防尘大容量收纳袋 (Underbed Storage Bags)", enKw: "Under Bed Storage Containers", price: "$18.99", cost: "¥6.5", margin: "86%", kw: "床底收纳箱 衣服换季整理袋", hook: "🎬 黄金前3秒：衣柜塞爆掉下来砸到头，把厚棉被全部装进收纳袋轻松滑入床底隐形。", audience: "换季家庭主妇、小户型公寓收纳控" }
+        { id: 101, img: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=300&auto=format&fit=crop&q=80", category: "AdSpy", heat: "💰 连续投流 22 天 · 预估消耗 $4.5W+", score: 99, sales7d: "12,400 单", roas: "1 : 4.8", title: "太空舱猫咪外出双肩包 (Bubble Cat Backpack Carrier)", enKw: "Bubble Cat Backpack", price: "$39.99", cost: "¥29.0", margin: "84%", kw: "太空舱猫包 跨境 透明宠物双肩包", hook: "🎬 黄金前3秒：猫咪在透明太空罩里好奇张望，路人纷纷回头拍照（超高自然互动率）。", audience: "美区/英区 18-38 岁养猫女性、公寓青年" },
+        { id: 102, img: "https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=300&auto=format&fit=crop&q=80", category: "Viral", heat: "📈 TikTok #CleanTok 霸榜 · 播放破千万", score: 97, sales7d: "15,800 单", roas: "1 : 6.2", title: "汽车挡风玻璃除油膜清洁刷 (Windshield Oil Film Cleaner)", enKw: "Windshield Oil Film Cleaner", price: "$18.99", cost: "¥5.8", margin: "89%", kw: "汽车玻璃油膜擦 除油膜清洁刷", hook: "🎬 黄金前3秒：大雨天夜间开车对向车灯炫光一片模糊，用刷子一划瞬间高清透亮对比。", audience: "北美全体车主 / 汽配高频刚需人群（常买二送一）" },
+        { id: 103, img: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=300&auto=format&fit=crop&q=80", category: "Creator", heat: "👑 620+ 健身达人挂车 · 佣金比例 20%", score: 95, sales7d: "9,650 单", roas: "1 : 4.1", title: "磁吸手机支架健身水杯 (Magnetic Gym Water Bottle)", enKw: "Magnetic Gym Water Bottle", price: "$36.99", cost: "¥28.0", margin: "82%", kw: "磁吸手机支架水杯 跨境 运动水壶", hook: "🎬 黄金前3秒：在健身房拿鞋子和哑铃垫手机自拍滑倒，随后啪的一声手机磁吸在水壶上任意旋转。", audience: "欧美 18-35 岁健身房常客、运动自拍达人" },
+        { id: 104, img: "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=300&auto=format&fit=crop&q=80", category: "Viral", heat: "📈 ASMR 解压直播间引流王 · 转化率 8.4%", score: 96, sales7d: "21,300 单", roas: "1 : 5.5", title: "捏捏乐高颜值猫爪发泄玩具 (Taba Squishy Cat Paw Toy)", enKw: "Taba Squishy Paw", price: "$9.99", cost: "¥1.5", margin: "92%", kw: "TPR软胶捏捏乐 猫爪发泄解压玩具", hook: "🎬 黄金前3秒：收音麦克风贴近，手指揉捏果冻质感猫爪发出极致治愈黏腻声（前3秒留存率75%）。", audience: "Z世代青少年、高压白领、ASMR重度受众" }
     ];
 
     let savedCustomItems = JSON.parse(localStorage.getItem('radar_custom_pool_v5') || '[]');
@@ -211,9 +224,9 @@
 
     function updateFavCount() {
         const favEl = document.getElementById('favCount');
-        const totalEl = document.getElementById('totalPoolCount');
+        const dashTotal = document.getElementById('dashTotalCount');
         if(favEl) favEl.innerText = favorites.length;
-        if(totalEl) totalEl.innerText = masterPool.length;
+        if(dashTotal) dashTotal.innerText = masterPool.length + " 款";
     }
 
     function setItemStatus(id, val) {
@@ -297,36 +310,41 @@
         box.innerHTML = items.map((item, index) => {
             const url1688 = `https://s.1688.com/selloffer/offer_search.htm?keywords=${encodeURIComponent(item.kw)}`;
             const urlTikTokVideo = `https://www.tiktok.com/search?q=${encodeURIComponent(item.enKw)}`;
-            const urlTikTokAds = `https://ads.tiktok.com/business/creativecenter/inspiration/topads/pc/en?keyword=${encodeURIComponent(item.enKw)}`;
+            const urlAmazon = `https://www.amazon.com/s?k=${encodeURIComponent(item.enKw)}`;
             const isFav = favorites.includes(item.id);
             const isTop = index < 3 && item.score >= 95;
             const st = itemStatuses[item.id] || 'none';
+            const imgUrl = item.img || `https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=300&auto=format&fit=crop&q=80`;
+
             return `
             <div class="item-card">
-                <div style="flex:1;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-                        <div>
-                            <span class="tag tag-ad">${item.heat}</span>
-                            <span class="tag tag-roas">🎯 预估 ROAS ${item.roas}</span>
-                            ${isTop ? '<span class="tag tag-top">👑 实时爆单置顶</span>' : ''}
+                <img src="${imgUrl}" class="prod-img" alt="爆品主图">
+                <div class="card-main">
+                    <div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+                            <div>
+                                <span class="tag tag-ad">${item.heat}</span>
+                                <span class="tag tag-roas">🎯 预估 ROAS ${item.roas}</span>
+                                ${isTop ? '<span class="tag tag-top">👑 实时爆单置顶</span>' : ''}
+                            </div>
+                            <select class="status-select" onchange="setItemStatus(${item.id}, this.value)">
+                                <option value="none" ${st==='none'?'selected':''}>📌 标记测款状态...</option>
+                                <option value="watch" ${st==='watch'?'selected':''}>👀 重点观望中</option>
+                                <option value="sample" ${st==='sample'?'selected':''}>📦 已1688拿样</option>
+                                <option value="ads" ${st==='ads'?'selected':''}>🚀 正在投流测款</option>
+                            </select>
                         </div>
-                        <select class="status-select" onchange="setItemStatus(${item.id}, this.value)">
-                            <option value="none" ${st==='none'?'selected':''}>📌 标记测款状态...</option>
-                            <option value="watch" ${st==='watch'?'selected':''}>👀 重点观望中</option>
-                            <option value="sample" ${st==='sample'?'selected':''}>📦 已1688拿样</option>
-                            <option value="ads" ${st==='ads'?'selected':''}>🚀 正在投流测款</option>
-                        </select>
-                    </div>
-                    <h3>${item.title}</h3>
-                    <div class="script-box">
-                        <div><strong class="cyan">${item.hook}</strong></div>
-                        <div style="color:#94a3b8; font-size:12px; margin-top:4px;">🎯 投流受众定向：${item.audience}</div>
+                        <h3>${item.title}</h3>
+                        <div class="script-box">
+                            <div><strong class="cyan">${item.hook}</strong></div>
+                            <div style="color:#94a3b8; font-size:12px; margin-top:4px;">🎯 投流受众定向：${item.audience}</div>
+                        </div>
                     </div>
                     <div class="metrics-row">
                         <span>📈 7日出单量: <b class="gold">${item.sales7d}</b></span>
                         <span>💵 海外售价: <b style="color:#fff">${item.price}</b></span>
-                        <span>🏭 1688拿货价: <b class="green">${item.cost}</b></span>
-                        <span>🔥 爆品权重分: <b class="cyan">${item.score}</b></span>
+                        <span>🏭 1688底价: <b class="green">${item.cost}</b></span>
+                        <span>🔥 爆品分: <b class="cyan">${item.score}</b></span>
                     </div>
                 </div>
                 <div class="right-box">
@@ -340,7 +358,7 @@
                         <a href="${url1688}" target="_blank" class="btn-1688">🔍 1688 找源头工厂</a>
                         <div class="row-btns">
                             <button class="btn-sub" onclick="openScriptModal(${item.id})">🎬 15秒脚本</button>
-                            <a href="${urlTikTokAds}" target="_blank" class="btn-sub">📊 广告库</a>
+                            <a href="${urlAmazon}" target="_blank" class="btn-sub">📦 Amazon同款</a>
                             <button class="btn-sub ${isFav ? 'btn-fav-active' : ''}" onclick="toggleFavorite(${item.id}, event)">${isFav ? '❤️' : '🤍'}</button>
                         </div>
                     </div>
@@ -448,6 +466,7 @@
                 const data = await response.json();
                 const aiItem = JSON.parse(data.choices[0].message.content);
                 aiItem.id = Date.now();
+                aiItem.img = `https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&auto=format&fit=crop&q=80`;
 
                 savedCustomItems.unshift(aiItem);
                 localStorage.setItem('radar_custom_pool_v5', JSON.stringify(savedCustomItems));
